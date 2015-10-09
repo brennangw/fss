@@ -1,0 +1,15 @@
+<h1>Add Trader</h1>
+
+<form action="/hw1/addtrader/" method="post">
+{% csrf_token %}
+  First name:<br>
+  <input type="text" name="firstname">
+  <br>
+  Last name:<br>
+  <input type="text" name="lastname">
+  <br>
+  Company:<br>
+  <input type="text" name="company">
+  <br>
+  <input type="submit" value="Vote" />
+</form>
