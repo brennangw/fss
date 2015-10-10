@@ -11,6 +11,15 @@ from django.db import connection
 def index(request):
     return render(request, 'hw1/index.html')
 
+def newTradePage(request):
+    return render(request, 'hw1/newTrade.html')
+
+def newTraderPage(request):
+    return render(request, 'hw1/newTrader.html')
+
+def aggregatePage(request):
+    return render(request, 'hw1/aggregate.html')
+
 def addtrader(request):
     first=request.POST['firstname']
     last=request.POST['lastname']
@@ -45,7 +54,7 @@ def aggregate(request):
     aggregate_position = cursor.fetchall()
 
     response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename=“aggregate.csv"'
+    response['Content-Disposition'] = 'attachment; filename="aggregate.csv"'
     writer = csv.writer(response)
     for i in range(len(aggregate_position)):
         writer.writerow(aggregate_position[i])

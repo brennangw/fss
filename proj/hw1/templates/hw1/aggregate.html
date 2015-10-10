@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="Description" content="Aggregate for hw1, CSOR4995">
+  <meta name="Author" content="Rajan Bhargava">
+</head>
+
+<body>
+
+  <form action="/hw1/aggregate/" method="post">
+  {% csrf_token %}
+    TraderID:<br>
+    <input type="text" name="traderid">
+    <br>
+    <input type="submit" value="Get Aggregate" />
+  </form>
+
+</body>
+</html>

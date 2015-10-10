@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="Description" content="Trade input page for hw1, CSOR4995">
+  <meta name="Author" content="Rajan Bhargava">
+</head>
+
+<body>
+  <h1>Add Trade</h1>
+
+  <form action="/hw1/addtrade/" method="post">
+  {% csrf_token %}
+    Time:<br>
+    <input type="text" name="time">
+    <br>
+    Product Code:<br>
+    <input type="text" name="product">
+    <br>
+    Month:<br>
+    <input type="text" name="month">
+    <br>
+    Year:<br>
+    <input type="number" name="year">
+    <br>
+    Lots:<br>
+    <input type="number" name="lots">
+    <br>
+    price:<br>
+    <input type="number" name="price">
+    <br>
+    Buy/Sell:<br>
+    <input type="text" name="sign">
+    <br>
+    Trader ID:<br>
+    <input type="number" name="trader">
+    <br>
+    <input type="submit" value="Add Trade" />
+  </form>
+
+</body>
+</html>

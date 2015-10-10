@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="Description" content="Trader input for hw1, CSOR4995">
+  <meta name="Author" content="Rajan Bhargava">
+</head>
+
+<body>
+  <h1>Add Trader</h1>
+
+  <form action="/hw1/addtrader/" method="post">
+  {% csrf_token %}
+    First name:<br>
+    <input type="text" name="firstname">
+    <br>
+    Last name:<br>
+    <input type="text" name="lastname">
+    <br>
+    Company:<br>
+    <input type="text" name="company">
+    <br>
+    <input type="submit" value="Add Trader" />
+  </form>
+
+</body>
+</html>
