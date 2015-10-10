@@ -22,9 +22,8 @@ class Clients(models.Model):
 
 class Trades(models.Model):
     time = models.DateTimeField(blank=True, null=True)
-    symbol = models.TextField(blank=True, null=True)
-    product_code = models.IntegerField(blank=True, null=True)
-    month_code = models.IntegerField(blank=True, null=True)
+    product_code = models.TextField(blank=True, null=True)
+    month_code = models.TextField(blank=True, null=True)
     year = models.IntegerField(blank=True, null=True)
     lots = models.IntegerField(blank=True, null=True)
     price = models.IntegerField(blank=True, null=True)
