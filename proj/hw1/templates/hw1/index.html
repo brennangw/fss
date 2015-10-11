@@ -5,14 +5,144 @@
   <meta charset="utf-8">
   <meta name="Description" content="Landing page for hw1, CSOR4995">
   <meta name="Author" content="Rajan Bhargava">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+  <!-- jQuery library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+  <!-- Latest compiled JavaScript -->
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+  <style type="text/css">
+    .section {
+      display: none;
+    }
+
+    #wrapper {
+      width: 80%;
+      padding-top: 20px;
+      margin: 0 auto;
+    }
+  </style>
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+
+      $("#sec-addtrade").show();
+
+      $("#tradeselect").click(function() {
+        $(".section").hide();
+        $("#sec-addtrade").show();
+      });
+
+      $("#traderselect").click(function() {
+        $(".section").hide();
+        $("#sec-addtrader").show();
+      });
+
+      $("#aggregateselect").click(function() {
+        $(".section").hide();
+        $("#sec-aggregate").show();
+      });
+
+      $(".nav li").click(function() {
+        $(".nav li").removeClass("active");
+        $(this).addClass("active");
+      });
+
+    });
+  </script>
+
 </head>
 
 <body>
 
-  <div id="wrapper">
-    <form action="/hw1/newTrade/"><button type="submit">Add trade</button></form>
-    <form action="/hw1/newTrader/"><button type="submit">Add trader</button></form>
-    <form action="/hw1/requestAggregate/"><button type="submit">Get aggregate</button></form>
+  <div id="container">
+    <nav class="navbar navbar-inverse">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">TradeBase</a>
+        </div>
+        <div>
+          <ul class="nav navbar-nav">
+            <li id="tradeselect" class="active"><a href="#">Add Trade</a></li>
+            <li id="traderselect"><a href="#">Add Trader</a></li>
+            <li id="aggregateselect"><a href="#">Get aggregate</a></li> 
+          </ul>
+        </div>
+      </div>
+    </nav>
+    
+    <div id="wrapper">
+      <div id="sec-addtrade" class="section">
+        <form role="form" action="/hw1/addtrade/" method="post">
+        {% csrf_token %}
+          <div class="form-group">
+            <label for="code">Product Code:</label>
+            <input type="text" class="form-control" id="product" name="product">
+          </div>
+          <div class="form-group">
+            <label for="month">Month:</label>
+            <input type="text" class="form-control" id="month" name="month">
+          </div>
+          <div class="form-group">
+            <label for="year">Year:</label>
+            <input type="number" class="form-control" id="year" name="year">
+          </div>
+          <div class="form-group">
+            <label for="email">Lots:</label>
+            <input type="number" class="form-control" id="lots" name="lots">
+          </div>
+          <div class="form-group">
+            <label for="email">Price:</label>
+            <input type="number" class="form-control" id="price" name="price">
+          </div>
+          <div class="form-group">
+            <label for="email">Buy/Sell:</label>
+            <input type="text" class="form-control" id="sign" name="sign">
+          </div>
+          <div class="form-group">
+            <label for="email">Trader ID:</label>
+            <input type="number" class="form-control" id="trader" name="trader">
+          </div>
+          
+          <button type="submit" class="btn btn-default">Add Trade</button>
+        </form>
+      </div>
+
+      <div id="sec-addtrader" class="section">
+        <form role="form" action="/hw1/addtrader/" method="post">
+        {% csrf_token %}
+          <div class="form-group">
+            <label for="firstname">First Name:</label>
+            <input type="text" class="form-control" id="firstname" name="firstname">
+          </div>
+          <div class="form-group">
+            <label for="lastname">Last Name:</label>
+            <input type="text" class="form-control" id="lastname" name="lastname">
+          </div>
+          <div class="form-group">
+            <label for="company">Company:</label>
+            <input type="text" class="form-control" id="company" name="company">
+          </div>
+          <button type="submit" class="btn btn-default">Add Trader</button>
+        </form>
+      </div>
+
+      <div id="sec-aggregate" class="section">
+        <form role="form" action="/hw1/aggregate/" method="post">
+        {% csrf_token %}
+          <div class="form-group">
+            <label for="traderid">Trader ID:</label>
+            <input type="text" class="form-control" id="traderid" name="traderid">
+          </div>
+          <button type="submit" class="btn btn-default">Get Aggregate</button>
+        </form>
+      </div>
+    </div>
   </div>
 
 </body>
