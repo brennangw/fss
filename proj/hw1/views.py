@@ -20,6 +20,9 @@ def newTraderPage(request):
 def aggregatePage(request):
     return render(request, 'hw1/aggregate.html')
 
+def historyPage(request):
+	return rener(request, 'hw1/history.html')
+
 def addtrader(request):
     first=request.POST['firstname']
     last=request.POST['lastname']
@@ -50,7 +53,11 @@ def aggregate(request):
 
     traderid=request.POST['traderid']
     cursor=connection.cursor()
-    cursor.execute("select CONCAT(product_code,month_code,year),sum(lots*buy_or_sell) from trades where trader= %s group by product_code, month_code, year",[traderid])
+    if (traderid == ""):
+        cursor.execute("select CONCAT(product_code, month_code, year),sum(lots*buy_or_sell) from trades group by product_code, month_code, year")
+    else:
+        cursor.execute("select CONCAT(product_code, month_code, year),sum(lots*buy_or_sell) from trades where trader=%s group by product_code, month_code, year",[traderid])
+
     aggregate_position = cursor.fetchall()
 
     response = HttpResponse(content_type='text/csv')
@@ -58,5 +65,21 @@ def aggregate(request):
     writer = csv.writer(response)
     for i in range(len(aggregate_position)):
         writer.writerow(aggregate_position[i])
-
     return response
+
+def history(request):
+	traderid=request.POST['traderid']
+	cursor=connection.cursor()
+	if (traderid == ""):
+		cursor.execute("select * from trades group by product_code, month_code, year")
+	else: 
+		cursor.execute("select * from trades where trader= %s group by product_code, month_code, year",[traderid])
+	aggregate_position = cursor.fetchall()
+	response = HttpResponse(content_type='text/csv')
+	response['Content-Disposition'] = 'attachement; filename="aggregate.csv"'
+	writer = csv.writer(response)
+	for i in range(len(aggregate_position)):
+		writer.writerow(aggregate_position[i]);
+	return response
+
+
