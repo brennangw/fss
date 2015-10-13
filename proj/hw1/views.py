@@ -31,23 +31,27 @@ def addtrader(request):
     new = Clients(first_name = first, last_name= last, company = comp)
     new.save()
 
-    return render(request, 'hw1/index.html')
+    return HttpResponseRedirect('/hw1/?success=true')
 
 def addtrade(request):
 
-    time=request.POST['time']
+    time='2015-01-01 00:00:00'
     product=request.POST['product']
     month=request.POST['month']
     year=request.POST['year']
     lots=request.POST['lots']
     price=request.POST['price']
-    sign=request.POST['sign']
+    sign=''
+    if request.POST['sign'] == 'Buy':
+    	sign=1
+    else:
+    	sign=-1
     trader= Clients.objects.get(id=request.POST['trader'])
 
     new = Trades(time = time, product_code = product, month_code = month, year = year, lots = lots, price = price, buy_or_sell = sign, trader = trader)
     new.save()
 
-    return render(request, 'hw1/index.html')
+    return HttpResponseRedirect('/hw1/?success=true')
 
 def aggregate(request):
 
@@ -65,6 +69,7 @@ def aggregate(request):
     writer = csv.writer(response)
     for i in range(len(aggregate_position)):
         writer.writerow(aggregate_position[i])
+    
     return response
 
 def history(request):
@@ -80,6 +85,5 @@ def history(request):
 	writer = csv.writer(response)
 	for i in range(len(aggregate_position)):
 		writer.writerow(aggregate_position[i]);
+	
 	return response
-
-

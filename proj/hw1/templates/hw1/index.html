@@ -22,10 +22,20 @@
     }
 
     #wrapper {
-      width: 80%;
+    	position: relative;
+      width: 30%;
       padding-top: 20px;
-      margin: 0 auto;
+			left: 10%;
     }
+
+    .radio-inline+ .radio-inline {
+    	margin-left: 0;
+		}
+
+		.radio-inline {
+			margin-left:  0px;
+		  margin-right: 10px;
+		}
   </style>
 
   <script type="text/javascript">
@@ -48,10 +58,14 @@
         $("#sec-aggregate").show();
       });
 
-	$("#historyselect").click(function() {
-	  $(".section").hide();
-	  $("#sec-history").show();
-	});
+			$("#historyselect").click(function() {
+			  $(".section").hide();
+			  $("#sec-history").show();
+			});
+
+			$("#tradeaddform").submit(function() {
+				$("")
+			});
 
       $(".nav li").click(function() {
         $(".nav li").removeClass("active");
@@ -69,58 +83,87 @@
     <nav class="navbar navbar-inverse">
       <div class="container-fluid">
         <div class="navbar-header">
-          <a class="navbar-brand" href="#">TradeBase</a>
+          	<a class="navbar-brand" href="#">TradeBase</a>
         </div>
         <div>
-          <ul class="nav navbar-nav">
-            <li id="tradeselect" class="active"><a href="#">Add Trade</a></li>
-            <li id="traderselect"><a href="#">Add Trader</a></li>
-            <li id="aggregateselect"><a href="#">Get aggregate</a></li> 
-            <li id="historyselect"><a href="#">Get history</a></li> 
-        </ul>
-	</div>
+    	    <ul class="nav navbar-nav">
+	            <li id="tradeselect" class="active"><a href="#">Add Trade</a></li>
+	            <li id="traderselect"><a href="#">Add Trader</a></li>
+	            <li id="aggregateselect"><a href="#">Get aggregate</a></li> 
+	            <li id="historyselect"><a href="#">Get history</a></li> 
+        	</ul>
+		</div>
       </div>
     </nav>
     
     <div id="wrapper">
       <div id="sec-addtrade" class="section">
-        <form role="form" action="/hw1/addtrade/" method="post">
+        <form role="tradeaddform" id="tradeaddform" action="/hw1/addtrade/" method="post">
         {% csrf_token %}
           <div class="form-group">
-            <label for="code">Product Code:</label>
-            <input type="text" class="form-control" id="product" name="product">
+            <label for="code">Product Code:</label> <br>
+            <label class="radio-inline"><input type="radio" value="S01" name="product">S01</label>
+			<label class="radio-inline"><input type="radio" value="S02" name="product">S02</label>
+			<label class="radio-inline"><input type="radio" value="S03" name="product">S03</label>
+			<label class="radio-inline"><input type="radio" value="S04" name="product">S04</label>
+			<label class="radio-inline"><input type="radio" value="S05" name="product">S05</label>
+			<label class="radio-inline"><input type="radio" value="S06" name="product">S06</label> 
+			<label class="radio-inline"><input type="radio" value="S07" name="product">S07</label>
+			<label class="radio-inline"><input type="radio" value="S08" name="product">S08</label>
+			<label class="radio-inline"><input type="radio" value="S09" name="product">S09</label>
+			<label class="radio-inline"><input type="radio" value="S10" name="product">S10</label>
+			<label class="radio-inline"><input type="radio" value="S11" name="product">S11</label>
+			<label class="radio-inline"><input type="radio" value="S12" name="product">S12</label> 
+			<label class="radio-inline"><input type="radio" value="S13" name="product">S13</label>
+			<label class="radio-inline"><input type="radio" value="S14" name="product">S14</label>
+			<label class="radio-inline"><input type="radio" value="S15" name="product">S15</label>
           </div>
           <div class="form-group">
             <label for="month">Month:</label>
-            <input type="text" class="form-control" id="month" name="month">
+            <select class="form-control" id="month" name="month">
+			        <option>Month 1</option>
+			        <option>Month 2</option>
+			        <option>Month 3</option>
+			        <option>Month 4</option>
+			        <option>Month 5</option>
+			        <option>Month 6</option>
+			        <option>Month 7</option>
+			        <option>Month 8</option>
+			        <option>Month 9</option>
+			        <option>Month 10</option>
+			        <option>Month 11</option>
+			        <option>Month 12</option>
+			      </select>
           </div>
           <div class="form-group">
             <label for="year">Year:</label>
-            <input type="number" class="form-control" id="year" name="year">
+            <input type="number" class="form-control" id="year" name="year" value="2015">
           </div>
           <div class="form-group">
             <label for="email">Lots:</label>
-            <input type="number" class="form-control" id="lots" name="lots">
+            <input type="number" class="form-control" id="lots" name="lots" value="1">
           </div>
           <div class="form-group">
             <label for="email">Price:</label>
-            <input type="number" class="form-control" id="price" name="price">
+            <input type="number" class="form-control" id="price" name="price"> 
           </div>
           <div class="form-group">
             <label for="email">Buy/Sell:</label>
-            <input type="text" class="form-control" id="sign" name="sign">
+            <select class="form-control" id="sign" name="sign">
+			        <option>Buy</option>
+			        <option>Sell</option>
+			      </select>
           </div>
           <div class="form-group">
             <label for="email">Trader ID:</label>
             <input type="number" class="form-control" id="trader" name="trader">
           </div>
-          
-          <button type="submit" class="btn btn-default">Add Trade</button>
+          <button type="submit" class="btn btn-primary">Add Trade</button>
         </form>
       </div>
 
       <div id="sec-addtrader" class="section">
-        <form role="form" action="/hw1/addtrader/" method="post">
+        <form role="traderaddform" id="traderaddform" action="/hw1/addtrader/" method="post">
         {% csrf_token %}
           <div class="form-group">
             <label for="firstname">First Name:</label>
@@ -134,31 +177,31 @@
             <label for="company">Company:</label>
             <input type="text" class="form-control" id="company" name="company">
           </div>
-          <button type="submit" class="btn btn-default">Add Trader</button>
+          <button type="submit" class="btn btn-primary">Add Trader</button>
         </form>
       </div>
 
       <div id="sec-aggregate" class="section">
-        <form role="form" action="/hw1/aggregate/" method="post">
+        <form role="aggregateform" id="aggregateform" action="/hw1/aggregate/" method="post">
         {% csrf_token %}
           <div class="form-group">
             <label for="traderid">Trader ID:</label>
             <input type="text" class="form-control" id="traderid" name="traderid">
           </div>
-          <button type="submit" class="btn btn-default">Get Aggregate</button>
+          <button type="submit" class="btn btn-primary">Get Aggregate</button>
         </form>
       </div>
 
 
 
       <div id="sec-history" class="section">
-        <form role="form" action="/hw1/history/" method="post">
+        <form role="historyform" id="historyform" action="/hw1/history/" method="post">
         {% csrf_token %}
-	<div class="form-group">
+		  		<div class="form-group">
             <label for="traderid">Trader ID:</label>
             <input type="text" class="form-control" id="traderid" name="traderid">
-        </div>  
-	<button type="submit" class="btn btn-default">Get History</button>
+          </div>  
+		  		<button type="submit" class="btn btn-primary">Get History</button>
         </form>
       </div>
     </div>
