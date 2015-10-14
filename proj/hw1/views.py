@@ -10,21 +10,58 @@ import time
 # Create your views here.
 
 def index(request):
+    """
+    Main page of the application, and has all of the forms required to 
+
+    1. Create entries to :model:`hw1.Clients` and :model:`hw1.Trades`.
+    2. Get verious aggregates and histories from these 2 models.
+
+    """
     return render(request, 'hw1/index.html')
 
 def newTradePage(request):
+    """
+    Page specific to adding a new trade to :model:`hw1.Trades`.
+
+    """
     return render(request, 'hw1/newTrade.html')
 
 def newTraderPage(request):
+    """
+    Page specific to adding a new trader to :model:`hw1.Clients`.
+
+    """
     return render(request, 'hw1/newTrader.html')
 
 def aggregatePage(request):
+    """
+    Page specific to requesting the aggregate position of a single trader, or the overall aggregate from :model:`hw1.Trades`.
+
+    """
     return render(request, 'hw1/aggregate.html')
 
 def historyPage(request):
-	return rener(request, 'hw1/history.html')
+    """
+    Page specific to requesting the trade history of a single trader, or the overall trade history from :model:`hw1.Trades`.
+
+    """
+    return rener(request, 'hw1/history.html')
 
 def addtrader(request):
+    """
+    API interface: Request handler for adding a new trader to :model:`hw1.Clients`.
+
+    Required parameters:
+
+        1. Product code
+        2. Month of contract expiry
+        3. Year of contract expiry
+        4. Number of lots
+        5. Price per lot
+        6. Buy/Sell (one of these as text)
+        7. Assigned trader_ID of the trader
+
+    """
     first=request.POST['firstname']
     last=request.POST['lastname']
     comp=request.POST['company']
@@ -35,7 +72,16 @@ def addtrader(request):
     return HttpResponseRedirect('/hw1/?success=true')
 
 def addtrade(request):
+    """
+    API interface: Request handler for adding a new trade to :model:`hw1.Trades`.
 
+    Required parameters:
+
+        1. First name of the trader
+        2. Last name of the trader
+        3. Company the trader belongs to
+
+    """
     date_time=time.strftime('%Y-%m-%d %H:%M:%S')
     product=request.POST['product']
     month=request.POST['month']
@@ -55,7 +101,12 @@ def addtrade(request):
     return HttpResponseRedirect('/hw1/?success=true')
 
 def aggregate(request):
+    """
+    API interface: Request handler for getting the aggregate position of a single trader, or the overall aggregate position from :model:`hw1.Trades`.
 
+        Required parameters: Trader_ID (unique ID or a blank field)
+
+    """
     traderid=request.POST['traderid']
     cursor=connection.cursor()
     if (traderid == ""):
@@ -77,6 +128,12 @@ def aggregate(request):
     return response
 
 def history(request):
+    """
+    API interface: Request handler for getting the trade history of a single trader, or all trade histories from :model:`hw1.Trades`.
+
+        Required parameters: Trader_ID (unique ID or a blank field)
+
+    """
     traderid=request.POST['traderid']
     cursor=connection.cursor()
     if (traderid == ""):

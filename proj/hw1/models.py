@@ -12,6 +12,11 @@ from __future__ import unicode_literals
 from django.db import models
 
 class Clients(models.Model):
+    """
+    Stores information about all traders in :model:`hw1.Clients`.
+
+    """
+    
     first_name = models.TextField(blank=True, null=True)
     last_name = models.TextField(blank=True, null=True)
     company = models.TextField(db_column='Company', blank=True, null=True)  # Field name made lowercase.
@@ -21,6 +26,13 @@ class Clients(models.Model):
         db_table = 'clients'
 
 class Trades(models.Model):
+    """
+    Records each trade entered in :model:`hw1.Trades`.
+
+    Each trade recorded links to a trader in :model:`hw1.Clients`.
+
+    """
+
     time = models.DateTimeField(blank=True, null=True)
     product_code = models.TextField(blank=True, null=True)
     month_code = models.TextField(blank=True, null=True)
