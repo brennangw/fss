@@ -1,9 +1,11 @@
 
 
-from django.conf.urls import url
+from django.conf.urls import patterns, include, url
 from . import views
+from django.contrib import admin
 
 urlpatterns = [
+	
     url(r'^$',views.index, name='index'),
     url(r'^newTrader/', views.newTraderPage, name='newTraderPage'),
     url(r'^newTrade/', views.newTradePage, name='newTradePage'),
