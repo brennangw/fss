@@ -36,7 +36,7 @@ def addtrader(request):
 
 def addtrade(request):
 
-    time=time.strftime('%Y-%m-%d %H:%M:%S')
+    date_time=time.strftime('%Y-%m-%d %H:%M:%S')
     product=request.POST['product']
     month=request.POST['month']
     year=request.POST['year']
@@ -49,7 +49,7 @@ def addtrade(request):
     	sign=-1
     trader= Clients.objects.get(id=request.POST['trader'])
 
-    new = Trades(time = time, product_code = product, month_code = month, year = year, lots = lots, price = price, buy_or_sell = sign, trader = trader)
+    new = Trades(time = date_time, product_code = product, month_code = month, year = year, lots = lots, price = price, buy_or_sell = sign, trader = trader)
     new.save()
 
     return HttpResponseRedirect('/hw1/?success=true')
