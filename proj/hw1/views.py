@@ -4,6 +4,7 @@ from django.core.urlresolvers import reverse
 from .models import Clients, Trades
 import csv
 from django.db import connection
+import time
 
 
 # Create your views here.
@@ -35,7 +36,7 @@ def addtrader(request):
 
 def addtrade(request):
 
-    time='2015-01-01 00:00:00'
+    time=time.strftime('%Y-%m-%d %H:%M:%S')
     product=request.POST['product']
     month=request.POST['month']
     year=request.POST['year']
@@ -58,32 +59,38 @@ def aggregate(request):
     traderid=request.POST['traderid']
     cursor=connection.cursor()
     if (traderid == ""):
-        cursor.execute("select CONCAT(product_code, month_code, year),sum(lots*buy_or_sell) from trades group by product_code, month_code, year")
+        cursor.execute("select product_code, month_code, year,sum(lots*buy_or_sell) from trades group by product_code, month_code, year")
+        header=['Product','Month','Year','Aggregate']
     else:
-        cursor.execute("select CONCAT(product_code, month_code, year),sum(lots*buy_or_sell) from trades where trader=%s group by product_code, month_code, year",[traderid])
+        cursor.execute("select product_code, month_code, year,sum(lots*buy_or_sell) from trades where trader=%s group by product_code, month_code, year",[traderid])
+        header=['Product','Month','Year','Aggregate']
 
     aggregate_position = cursor.fetchall()
 
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="aggregate.csv"'
     writer = csv.writer(response)
+    writer.writerow(header)
     for i in range(len(aggregate_position)):
         writer.writerow(aggregate_position[i])
     
     return response
 
 def history(request):
-	traderid=request.POST['traderid']
-	cursor=connection.cursor()
-	if (traderid == ""):
-		cursor.execute("select * from trades group by product_code, month_code, year")
-	else: 
-		cursor.execute("select * from trades where trader= %s group by product_code, month_code, year",[traderid])
-	aggregate_position = cursor.fetchall()
-	response = HttpResponse(content_type='text/csv')
-	response['Content-Disposition'] = 'attachement; filename="aggregate.csv"'
-	writer = csv.writer(response)
-	for i in range(len(aggregate_position)):
-		writer.writerow(aggregate_position[i]);
-	
-	return response
+    traderid=request.POST['traderid']
+    cursor=connection.cursor()
+    if (traderid == ""):
+        cursor.execute("select * from trades")
+        header=['Trade_ID','Time','Product','Month','Year','Lots','Price','Buy(+1)/Sell(-1)','Trader_ID']
+    else: 
+        cursor.execute("select * from trades where trader= %s",[traderid])
+        header=['Trade_ID','Time','Product','Month','Year','Lots','Price','Buy(+1)/Sell(-1)','Trader_ID']
+    aggregate_position = cursor.fetchall()
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachement; filename="aggregate.csv"'
+    writer = csv.writer(response)
+    writer.writerow(header)
+    for i in range(len(aggregate_position)):
+        writer.writerow(aggregate_position[i]);
+    
+    return response
