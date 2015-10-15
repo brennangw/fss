@@ -145,7 +145,7 @@
             <input type="number" class="form-control" id="lots" name="lots" value="1">
           </div>
           <div class="form-group">
-            <label for="email">Price:</label>
+            <label for="email">Price (in cents):</label>
             <input type="number" class="form-control" id="price" name="price"> 
           </div>
           <div class="form-group">
@@ -186,7 +186,7 @@
         <form role="aggregateform" id="aggregateform" action="/hw1/aggregate/" method="post">
         {% csrf_token %}
           <div class="form-group">
-            <label for="traderid">Trader ID:</label>
+            <label for="traderid">Trader ID (leave blank for overall aggregate):</label>
             <input type="text" class="form-control" id="traderid" name="traderid">
           </div>
           <button type="submit" class="btn btn-primary">Get Aggregate</button>
@@ -199,7 +199,7 @@
         <form role="historyform" id="historyform" action="/hw1/history/" method="post">
         {% csrf_token %}
 		  		<div class="form-group">
-            <label for="traderid">Trader ID:</label>
+            <label for="traderid">Trader ID (leave blank for overall history):</label>
             <input type="text" class="form-control" id="traderid" name="traderid">
           </div>  
 		  		<button type="submit" class="btn btn-primary">Get History</button>

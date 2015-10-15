@@ -138,10 +138,10 @@ def history(request):
     cursor=connection.cursor()
     if (traderid == ""):
         cursor.execute("select * from trades")
-        header=['Trade_ID','Time','Product','Month','Year','Lots','Price','Buy(+1)/Sell(-1)','Trader_ID']
+        header=['Trade_ID','Time','Product','Month','Year','Lots','Price (in cents)','Buy(+1)/Sell(-1)','Trader_ID']
     else: 
         cursor.execute("select * from trades where trader= %s",[traderid])
-        header=['Trade_ID','Time','Product','Month','Year','Lots','Price','Buy(+1)/Sell(-1)','Trader_ID']
+        header=['Trade_ID','Time','Product','Month','Year','Lots','Price (in cents)','Buy(+1)/Sell(-1)','Trader_ID']
     aggregate_position = cursor.fetchall()
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachement; filename="aggregate.csv"'
