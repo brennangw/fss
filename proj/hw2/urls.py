@@ -12,5 +12,7 @@ urlpatterns = [
     url(r'^aggregate/',views.aggregate, name='aggregate'),
     url(r'^history/',views.history, name='history'),
     url(r'^portfolio/',views.portfolio, name='portfolio'),
-    url(r'^pnl/',views.pnl, name='pnl')
+    url(r'^pnl/',views.pnl, name='pnl'),
+    url(r'^fill/',views.fill, name='fill'),
+    url(r'^ack/',views.fill, name='ack'),
 ]

@@ -91,13 +91,13 @@ def addtrade(request):
     price=request.POST.get('price', False)
     sign=''
     if request.POST.get('sign', False) == 'Buy':
-    	sign=1
+        sign=1
     else:
-    	sign=-1
+        sign=-1
     trader= Clients.objects.get(id=request.POST.get('trader', False))
     side = request.POST.get('sign', False).lower();
     type = request.POST.get('type', False)
-	post_data = {'type': type, 'side': side, 'symbol': product, 'price': price, 'lots' : lots}
+    post_data = {'type': type, 'side': side, 'symbol': product, 'price': price, 'lots' : lots}
     requests.post('localhost:8080/fix/process-order', data=post_data)
     return HttpResponseRedirect('/hw1/?success=true')
 
