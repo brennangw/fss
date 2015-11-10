@@ -5,6 +5,7 @@ from .models import Clients, Trades
 import csv
 from django.db import connection
 import time
+import requests
 
 
 # Create your views here.
@@ -45,7 +46,7 @@ def historyPage(request):
     Page specific to requesting the trade history of a single trader, or the overall trade history from :model:`hw1.Trades`.
 
     """
-    return rener(request, 'hw1/history.html')
+    return render(request, 'hw1/history.html')
 
 def addtrader(request):
     """
@@ -94,10 +95,11 @@ def addtrade(request):
     else:
     	sign=-1
     trader= Clients.objects.get(id=request.POST['trader'])
-
+	side = request.POST['sign'].lower();
     new = Trades(time = date_time, product_code = product, month_code = month, year = year, lots = lots, price = price, buy_or_sell = sign, trader = trader)
     new.save()
-
+	post_data = {'type': type, 'side': side, 'symbol': product, 'price': price, 'lots' : lots}
+	requests.post('localhost:8080/fix/process-order', data=post_data)
     return HttpResponseRedirect('/hw1/?success=true')
 
 def aggregate(request):
@@ -149,5 +151,4 @@ def history(request):
     writer.writerow(header)
     for i in range(len(aggregate_position)):
         writer.writerow(aggregate_position[i]);
-    
     return response
