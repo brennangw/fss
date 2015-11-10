@@ -1,0 +1,21 @@
+  # default settings for sessions
+  [DEFAULT]
+  ConnectionType=initiator
+  ReconnectInterval=60
+  SenderCompID=CL
+  FileStorePath=C:/Users/rajan/OneDrive/Columbia/sem 1/Financial Software Systems/project/fss/FIX/resources/client/store
+  FileLogPath=C:/Users/rajan/OneDrive/Columbia/sem 1/Financial Software Systems/project/fss/FIX/resources/client/log
+
+  # session definition
+  [SESSION]
+  # inherit ConnectionType, ReconnectInterval and SenderCompID from default
+
+  BeginString=FIX.4.2
+  TargetCompID=EX
+  StartTime=00:00:00
+  EndTime=23:59:59
+  HeartBtInt=20
+  SocketConnectHost=localhost
+  SocketConnectPort=8888
+  DataDictionary=C:/Users/rajan/OneDrive/Columbia/sem 1/Financial Software Systems/project/fss/FIX/resources/FIX42.xml
+  
