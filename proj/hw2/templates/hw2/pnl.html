@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="Description" content="Aggregate for hw1, CSOR4995">
+  <meta name="Author" content="Rajan Bhargava">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+  <!-- jQuery library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+  <!-- Latest compiled JavaScript -->
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+<div id="container">
+
+  {% include 'hw2/nav.html' %}
+  <div class="container">
+
+    <h1>Generate PnL</h1>
+    <form role="form" action="/hw2/pnl/" method="post">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="traderid">Trader ID:</label>
+        <input type="text" class="form-control" id="traderid" name="traderid">
+      </div>
+      <button type="submit" class="btn btn-default">Get Aggregate</button>
+    </form>
+
+  </div>
+</div>
+</body>
+
+</html>

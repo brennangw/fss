@@ -1,0 +1,17 @@
+    <nav class="navbar navbar-inverse">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          	<a class="navbar-brand" href="{% url 'index' %}">TradeBase</a>
+        </div>
+        <div>
+    	    <ul class="nav navbar-nav">
+                <li id="trader"><a href="{% url 'addtrader' %}">Add Trader</a></li>
+	            <li id="trade"><a href="{% url 'addtrade' %}">Add Trade</a></li>
+	            <li id="aggregate"><a href="{% url 'aggregate' %}">Get aggregate</a></li>
+	            <li id="history"><a href="{% url 'history' %}">Get history</a></li>
+                <li id="portfolio"><a href="{% url 'portfolio' %}">Portfolios</a></li>
+                <li id="pnl"><a href="{% url 'pnl' %}">PnL</a></li>
+        	</ul>
+		</div>
+      </div>
+    </nav>
