@@ -96,11 +96,39 @@ def addtrade(request):
     	sign=-1
     trader= Clients.objects.get(id=request.POST.get('trader', False))
     side = request.POST.get('sign', False).lower();
-    new = Trades(time = date_time, product_code = product, month_code = month, year = year, lots = lots, price = price, buy_or_sell = sign, trader = trader)
-    new.save()
-    post_data = {'type': request.POST.get('type', False), 'side': side, 'symbol': product, 'price': price, 'lots' : lots}
+    type = request.POST.get('type', False)
+	post_data = {'type': type, 'side': side, 'symbol': product, 'price': price, 'lots' : lots}
     requests.post('localhost:8080/fix/process-order', data=post_data)
     return HttpResponseRedirect('/hw1/?success=true')
+
+def ack(request):
+    date_time=time.strftime('%Y-%m-%d %H:%M:%S')
+    product=request.POST.get('product', False)
+    month=request.POST.get('month', False)
+    year=request.POST.get('year', False)
+    lots=request.POST.get('lots', False)
+    price=request.POST.get('price', False)
+    sign=''
+    if request.POST.get('sign', False) == 'Buy':
+    	sign=1
+    else:
+    product=request.POST.get('product', False)
+    month=request.POST.get('month', False)
+    year=request.POST.get('year', False)
+    lots=request.POST.get('lots', False)
+    price=request.POST.get('price', False)
+    sign=''
+    if request.POST.get('sign', False) == 'Buy':
+    	sign=1
+    else:
+    	sign=-1
+    trader= Clients.objects.get(id=request.POST.get('trader', False))
+    side = request.POST.get('sign', False).lower();
+    new = Trades(time = date_time, product_code = product, month_code = month, year = year, lots = lots, price = price, buy_or_sell = sign, trader = trader)
+    new.save()
+
+def fill(request):
+		
 
 def aggregate(request):
     """
