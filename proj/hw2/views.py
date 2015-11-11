@@ -88,7 +88,7 @@ def exchange_message(request):
         if orderStatus == "partial fill":
             tradeid = request.POST.get('ClOrdId', False)
             trade = Trades.objects.get(id=tradeid)
-            trade.status = 4;
+            trade.status = 4
             trade.save();
             lots = request.POST.get('LastShares', False)
             filled_price = request.POST.get('LastPrice', False)
