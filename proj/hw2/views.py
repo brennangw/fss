@@ -1,11 +1,11 @@
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
-from .models import Clients, Trades, Portfolio
+from .models import Clients, Trades
 import csv
 from django.db import connection
 import time
-import requests
+
 
 # Create your views here.
 
@@ -72,8 +72,7 @@ def addtrade(request):
         trader= Clients.objects.get(id=request.POST.get('trader', False))
         side = request.POST.get('sign', False).lower();
         type = request.POST.get('type', False)
-        new = Trades(status = 0, time = date_time, product_code = product, month_code = month, year = year, lots = lots)
-        id = Trades.objects.latest('id')
+        new = Trade(status = 0, time = date_time, product_code = product, month_code = month, year = year, lots = lots, buy_or_sell = sign, order_type = type, price = price, trader = trader)
         post_data = {'id': id, 'type': type, 'side': side, 'symbol': product, 'price': price, 'lots' : lots}
         requests.post('localhost:8080/fix/process-order', data=post_data)
         new.save()
@@ -84,36 +83,37 @@ def exchange_message(request):
         orderStatus = request.POST.get('OrderStatus', False)
         for key, value in request.POST.iteritems():
             print key + ": " + value + "\n"
-        if orderStatus == "partial fill":
+        if orderStatus == "partial fill"
+            tradeid = request.POST.get('ClOrdId', False)
             trade = Trades.objects.get(id=tradeid)
-            trade.status = 4
-            trade.save()
-            trade_id = request.POST.get('ClOrdId', False)
+            trade.status = 4;
+            trade.save();
             lots = request.POST.get('LastShares', False)
             filled_price = request.POST.get('LastPrice', False)
-            new = Portfolio(trade = trade_id, lots = lots, filled_id = , filled_price = filled_price)
-        elif orderStatus == "complete fill":
-            tradeid = request.POST.get('id', False)
+            filled_id = request.POST.get('ExecID', False);
+            filled_time = request.POST.get('TransactionTime', False)
+            new = Portfolio('trade_id': tradeid, 'lots': lots, 'filled_price': filled_price, 'filled_id' = filled_id, 'filled_time': filled_time)
+        else if orderStatus == "complete fill"i
+            tradeid = request.POST.get('ClOrdId', False)
             trade = Trades.objects.get(id=tradeid)
-            trade.status = 5
-            trade.save()
-            trade_id = request.POST.get('ClOrdId', False)
+            trade.status = 5;
+            trade.save();
             lots = request.POST.get('LastShares', False)
             filled_price = request.POST.get('LastPrice', False)
-            filled_id = True
-            new = Portfolio(trade_id = trade_id, lots = lots, filled_price = filled_price, filled_id = filled_id) 
-
-        elif orderStatus == "ack":
+            filled_id = request.POST.get('ExecID', False) 
+            filled_time = request.POST.get('TransactionTime', False)
+            new = Portfolio('trade_id': tradeid, 'lots': lots, 'filled_price': filled_price, 'filled_id' = filled_id, 'filled_time': filled_time) 
+        else if orderStatus == "ack"
             tradeid = request.POST.get('id', False)
             trade = Trades.objects.get(id=tradeid)
-            trade.status = 3
-            trade.save()
+            trade.status = 3;
+            trade.save();
 
 def fixAck(request):
     tradeid = request.POST.get('id', False)
     trade = Trades.objects.get(id=tradeid)
-    trade.status = 2
-    trade.save()
+    trade.status = 2;
+    trade.save();
 
 def aggregate(request):
     """
