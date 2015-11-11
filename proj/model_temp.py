@@ -12,41 +12,6 @@ from __future__ import unicode_literals
 from django.db import models
 
 
-class Company(models.Model):
-    name = models.TextField(blank=True, null=True)
-    login = models.TextField(blank=True, null=True)
-    password = models.IntegerField(blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'Company'
-
-
-class Consumer(models.Model):
-    name = models.TextField(blank=True, null=True)
-    login = models.TextField(blank=True, null=True)
-    password = models.TextField(blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'Consumer'
-
-
-class Product(models.Model):
-    id = models.ForeignKey(Consumer, db_column='id', primary_key=True)
-    time = models.DateTimeField(blank=True, null=True)
-    name = models.TextField(blank=True, null=True)
-    posterid = models.IntegerField(blank=True, null=True)
-    likes = models.IntegerField(blank=True, null=True)
-    catchphrase = models.TextField(blank=True, null=True)
-    category = models.TextField(blank=True, null=True)
-    imageurl = models.TextField(db_column='imageURL', blank=True, null=True)  # Field name made lowercase.
-
-    class Meta:
-        managed = False
-        db_table = 'Product'
-
-
 class AuthGroup(models.Model):
     name = models.CharField(unique=True, max_length=80)
 
@@ -194,9 +159,9 @@ class OrderBook(models.Model):
 
 
 class Portfolio(models.Model):
-    id = models.ForeignKey('Trade', db_column='id', primary_key=True)
-    trade_id = models.IntegerField()
+    trade = models.ForeignKey('Trade')
     filled_id = models.IntegerField(blank=True, null=True)
+    filled_time = models.DateTimeField(blank=True, null=True)
     lots = models.IntegerField(blank=True, null=True)
     filled_price = models.FloatField(blank=True, null=True)
 
@@ -215,6 +180,7 @@ class Trade(models.Model):
     order_type = models.CharField(max_length=11)
     price = models.IntegerField()
     trader = models.ForeignKey(Clients, db_column='trader')
+    status = models.CharField(max_length=5, blank=True, null=True)
 
     class Meta:
         managed = False
