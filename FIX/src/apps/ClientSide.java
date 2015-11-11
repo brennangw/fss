@@ -1,12 +1,18 @@
 package apps;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
 
 import quickfix.Application;
 import quickfix.DoNotSend;
@@ -40,27 +46,72 @@ public class ClientSide extends quickfix.MessageCracker implements Application {
 	
 	public void onMessage(quickfix.fix42.ExecutionReport report, SessionID sessionID)
 		      throws FieldNotFound, UnsupportedMessageType, IncorrectTagValue {
-		// TODO: Get an ack or a partial/complete fill from the exchange and relay it to the python system
 		
-		//HttpClient httpClient = HttpClients.createDefault();
-		//HttpPost httppost = new HttpPost("http://localhost:8000/hw2/exchange-message");
+		String URL = "http://localhost:8000/hw2/exchange-message";
+		String USER_AGENT = "Eclipse-Tomcat";
+		
+		HttpClient httpClient = HttpClients.createDefault();
+		
+		HttpPost post = new HttpPost(URL);
+		post.setHeader("User-Agent", USER_AGENT);
+		
+		List<NameValuePair> params = new ArrayList<>();
 		
 		switch(report.getOrdStatus().getValue()) {
 		case OrdStatus.ACCEPTED_FOR_BIDDING:
-			// ACknowledgement
+			// Acknowledgement received
 			System.out.println("received ack");
+			
+			params.add(new BasicNameValuePair("ClOrdID", report.getClOrdID().getValue()));
+			params.add(new BasicNameValuePair("OrderID", report.getOrderID().getValue()));
+			params.add(new BasicNameValuePair("ExecID", report.getExecID().getValue()));
+			params.add(new BasicNameValuePair("ExecType", String.valueOf(report.getExecType().getValue())));
+			params.add(new BasicNameValuePair("OrderStatus", String.valueOf(report.getOrdStatus().getValue())));
+			params.add(new BasicNameValuePair("Symbol", report.getSymbol().getValue()));
+			params.add(new BasicNameValuePair("Side", report.getSide().toString()));
+			params.add(new BasicNameValuePair("TransactionTime", report.getTransactTime().getValue().toString()));
 			
 			break;
 		case OrdStatus.PARTIALLY_FILLED:
-			// Partial fill
+			// Partial fill received
+			System.out.println("received partial fill");
 			
-			break;
 		case OrdStatus.FILLED:
-			// Fully filled
+			// Full fill received
+			System.out.println("received full fill");
+			
+			params.add(new BasicNameValuePair("ClOrdID", report.getClOrdID().getValue()));
+			params.add(new BasicNameValuePair("OrderID", report.getOrderID().getValue()));
+			params.add(new BasicNameValuePair("ExecID", report.getExecID().getValue()));
+			params.add(new BasicNameValuePair("ExecType", String.valueOf(report.getExecType().getValue())));
+			params.add(new BasicNameValuePair("OrderStatus", String.valueOf(report.getOrdStatus().getValue())));
+			params.add(new BasicNameValuePair("Symbol", report.getSymbol().getValue()));
+			params.add(new BasicNameValuePair("Side", report.getSide().toString()));
+			params.add(new BasicNameValuePair("TransactionTime", report.getTransactTime().getValue().toString()));
+			params.add(new BasicNameValuePair("LastShares", String.valueOf(report.getLastShares().getValue())));
+			params.add(new BasicNameValuePair("LastPrice", String.valueOf(report.getLastPx().getValue())));
 			
 			break;
 		default:
 			System.out.println("Error, exec report order status not valid");
+			return;
+		}
+		
+		try {
+			// Attaching the parameters and sending the data to python
+			post.setEntity(new UrlEncodedFormEntity(params));
+			HttpResponse resp = httpClient.execute(post);
+			
+			// TODO: Do something with the response
+		} catch (UnsupportedEncodingException e) {
+			System.out.println("Could not add parameters to post request");
+			e.printStackTrace();
+		} catch (ClientProtocolException e) {
+			System.out.println("Could not send request to python - bad protocol");
+			e.printStackTrace();
+		} catch (IOException e) {
+			System.out.println("Could not send request to client - IO exception");
+			e.printStackTrace();
 		}
 		
 	}
