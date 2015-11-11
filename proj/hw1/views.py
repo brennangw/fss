@@ -91,6 +91,27 @@ def addtrade(request):
     price=request.POST.get('price', False)
     sign=''
     if request.POST.get('sign', False) == 'Buy':
+
+
+def addtrade(request):
+    """
+    API interface: Request handler for adding a new trade to :model:`hw1.Trades`.
+
+    Required parameters:
+
+        1. First name of the trader
+        2. Last name of the trader
+        3. Company the trader belongs to
+
+    """
+    date_time=time.strftime('%Y-%m-%d %H:%M:%S')
+    product=request.POST.get('product', False)
+    month=request.POST.get('month', False)
+    year=request.POST.get('year', False)
+    lots=request.POST.get('lots', False)
+    price=request.POST.get('price', False)
+    sign=''
+    if request.POST.get('sign', False) == 'Buy':
         sign=1
     else:
         sign=-1
