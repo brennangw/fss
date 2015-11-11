@@ -39,35 +39,60 @@ public class ExchangeSide extends quickfix.MessageCracker implements Application
 		
 		ExecutionReport ackRep = new ExecutionReport(
 				new OrderID(order.getClOrdID().getValue()), 
-				new ExecID(order.getClOrdID().getValue() + genExecID()), 
+				this.genExecID(order), 
 				new ExecTransType(ExecTransType.STATUS), 
-				new ExecType(ExecType.NEW), 
+				new ExecType(ExecType.NEW),
 				new OrdStatus(OrdStatus.ACCEPTED_FOR_BIDDING), 
-				order.getSymbol(), order.getSide(), 
+				order.getSymbol(), 
+				order.getSide(), 
 				new LeavesQty(order.getOrderQty().getValue()), 
-				new CumQty(0), 
+				new CumQty(0),
 				new AvgPx(0));
 		
+		ackRep.set(order.getClOrdID());
 		ackRep.set(new Text("New order"));
 		ackRep.set(new TransactTime(new Date()));
 		
 		try {
 			this.trySendingMessage(ackRep);
 		} catch (SessionNotFound e) {
-			System.out.println("Ack send failed");
+			System.out.println("Ack send failed.");
 			e.printStackTrace();
 		}
 		
 		// TODO: Connect to order book, and add/match as needed
 		
 		// TODO: Respond with fills as needed
+		double priceMatch = 100;
+		ExecutionReport testFullFill = new ExecutionReport(
+				new OrderID(order.getClOrdID().getValue()),
+				this.genExecID(order),
+				new ExecTransType(ExecTransType.NEW),
+				new ExecType(ExecType.FILL),
+				new OrdStatus(OrdStatus.FILLED),
+				order.getSymbol(),
+				order.getSide(),
+				new LeavesQty(0),
+				new CumQty(order.getOrderQty().getValue()),
+				new AvgPx(priceMatch));
 		
+		testFullFill.set(new LastShares(order.getOrderQty().getValue()));
+		testFullFill.set(order.getClOrdID());
+		testFullFill.set(new TransactTime(new Date()));
+		testFullFill.set(new LastPx(priceMatch));
+		
+		try {
+			this.trySendingMessage(testFullFill);
+		} catch (SessionNotFound e) {
+			System.out.println("Fill send failed.");
+			e.printStackTrace();
+		}
 	}
 	
-	private String genExecID() {
+	private ExecID genExecID(NewOrderSingle order) throws FieldNotFound {
 		int ret = this.execId;
 		this.execId++;
-		return String.valueOf(ret);
+		return new ExecID(order.getClOrdID().getValue() + " " + String.valueOf(ret));
 	}
 	
 	@Override
