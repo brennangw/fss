@@ -57,26 +57,63 @@ def addtrade(request):
         3. Company the trader belongs to
 
     """
-    success=''
     if request.method == 'POST':
         date_time=time.strftime('%Y-%m-%d %H:%M:%S')
-        product=request.POST['product']
-        month=request.POST['month']
-        year=request.POST['year']
-        lots=request.POST['lots']
-        price=request.POST['price']
+        product=request.POST.get('product', False)
+        month=request.POST.get('month', False)
+        year=request.POST.get('year', False)
+        lots=request.POST.get('lots', False)
+        price=request.POST.get('price', False)
         sign=''
-        if request.POST['sign'] == 'Buy':
+        if request.POST.get('sign', False) == 'Buy':
             sign=1
         else:
             sign=-1
-        trader= Clients.objects.get(id=request.POST['trader'])
-
-        new = Trades(time = date_time, product_code = product, month_code = month, year = year, lots = lots, price = price, buy_or_sell = sign, trader = trader)
+        trader= Clients.objects.get(id=request.POST.get('trader', False))
+        side = request.POST.get('sign', False).lower();
+        type = request.POST.get('type', False)
+        new = Trades(status = 0; time = date_time, product_code = product, month_code = month, year = year, l$
+        id = Trades.objects.latest('id');
+        post_data = {'id': id, 'type': type, 'side': side, 'symbol': product, 'price': price, 'lots' : lots}
+        requests.post('localhost:8080/fix/process-order', data=post_data)
         new.save()
-        success = 'Success!'
+        return HttpResponseRedirect('/hw1/?success=true')
 
-    return render(request,'hw2/newTrade.html', context={'success': success})
+def exchange-message(request):
+    if request.method == 'POST':
+        orderStatus = request.POST.get('OrderStatus', False)
+        if orderStatus == "partial fill"
+            tradeid = request.POST.get('id', False)
+            trade = Trades.objects.get(id=tradeid)
+            trade.status = 4;
+            trade.save();
+            trade_id = request.POST.get('ClOrdId', False)
+            lots = request.POST.get('LastShares', False)
+            filled_price = request.POST.get('LastPrice', False)
+            new = Portfolio('trade_id': trade_id, 'lots': lots, 'filled_price': filled_price) 
+
+        else if orderStatus == "complete fill"i
+            tradeid = request.POST.get('id', False)
+            trade = Trades.objects.get(id=tradeid)
+            trade.status = 5;
+            trade.save();
+            trade_id = request.POST.get('ClOrdId', False)
+            lots = request.POST.get('LastShares', False)
+            filled_price = request.POST.get('LastPrice', False)
+            filled_id = True; 
+			new = Portfolio('trade_id': trade_id, 'lots': lots, 'filled_price': filled_price, 'filled_id' = filled_id) 
+
+        else if orderStatus == "ack"
+            tradeid = request.POST.get('id', False)
+            trade = Trades.objects.get(id=tradeid)
+            trade.status = 3;
+            trade.save();
+
+def fixAck(request):
+    tradeid = request.POST.get('id', False)
+    trade = Trades.objects.get(id=tradeid)
+    trade.status = 2;
+    trade.save();
 
 def aggregate(request):
     """
