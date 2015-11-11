@@ -1,11 +1,11 @@
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
-from .models import Clients, Trades
+from .models import Clients, Trade, Portfolio
 import csv
 from django.db import connection
 import time
-
+import requests
 
 # Create your views here.
 
@@ -97,7 +97,7 @@ def exchange_message(request):
             new = Portfolio(trade_id =  tradeid, lots = lots, filled_price = filled_price, filled_id  = filled_id, filled_time = filled_time)
         elif orderStatus == "complete fill":
             tradeid = request.POST.get('ClOrdId', False)
-            trade = Trades.objects.get(id=tradeid)
+            trade = Trade.objects.get(id=tradeid)
             trade.status = 5;
             trade.save();
             lots = request.POST.get('LastShares', False)
@@ -107,7 +107,7 @@ def exchange_message(request):
             new = Portfolio(trade_id =  tradeid, lots =  lots, filled_price = filled_price, filled_id = filled_id, filled_time = filled_time) 
         elif orderStatus == "ack":
             tradeid = request.POST.get('id', False)
-            trade = Trades.objects.get(id=tradeid)
+            trade = Trade.objects.get(id=tradeid)
             trade.status = 3;
             trade.save();
 
