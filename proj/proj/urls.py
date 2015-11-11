@@ -17,7 +17,7 @@ from django.conf.urls import include, url
 from django.contrib import admin
 
 urlpatterns = [
-    url(r'^hw1/', include('hw1.urls')),
+    #url(r'^hw1/', include('hw1.urls')),
     url(r'^hw2/', include('hw2.urls')),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls)),

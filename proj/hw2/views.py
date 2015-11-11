@@ -72,7 +72,7 @@ def addtrade(request):
         trader= Clients.objects.get(id=request.POST.get('trader', False))
         side = request.POST.get('sign', False).lower();
         type = request.POST.get('type', False)
-        new = Trades(status = 0; time = date_time, product_code = product, month_code = month, year = year, l$
+        new = Trades(status = 0; time = date_time, product_code = product, month_code = month, year = year, l)
         id = Trades.objects.latest('id');
         post_data = {'id': id, 'type': type, 'side': side, 'symbol': product, 'price': price, 'lots' : lots}
         requests.post('localhost:8080/fix/process-order', data=post_data)
@@ -92,8 +92,7 @@ def exchange-message(request):
             trade_id = request.POST.get('ClOrdId', False)
             lots = request.POST.get('LastShares', False)
             filled_price = request.POST.get('LastPrice', False)
-            new = Portfolio('trade_id': trade_id, 'lots': lots, 'filled_price': filled_price) 
-
+            new = Portfolio('trade_id': trade_id, 'lots': lots, 'filled_price': filled_price)
         else if orderStatus == "complete fill"i
             tradeid = request.POST.get('id', False)
             trade = Trades.objects.get(id=tradeid)
@@ -103,7 +102,7 @@ def exchange-message(request):
             lots = request.POST.get('LastShares', False)
             filled_price = request.POST.get('LastPrice', False)
             filled_id = True; 
-			new = Portfolio('trade_id': trade_id, 'lots': lots, 'filled_price': filled_price, 'filled_id' = filled_id) 
+            new = Portfolio('trade_id': trade_id, 'lots': lots, 'filled_price': filled_price, 'filled_id' = filled_id) 
 
         else if orderStatus == "ack"
             tradeid = request.POST.get('id', False)

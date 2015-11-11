@@ -1,6 +1,9 @@
 package apps;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.Date;
+import java.util.Random;
 
 import quickfix.*;
 import quickfix.field.*;
@@ -30,13 +33,6 @@ public class ExchangeSide extends quickfix.MessageCracker implements Application
 	public void onMessage(quickfix.fix42.NewOrderSingle order, SessionID sessionID)
 		      throws FieldNotFound, UnsupportedMessageType, IncorrectTagValue {
 
-		OrdType ordType = order.getOrdType();
-		ClOrdID clOrdID = order.getClOrdID();
-		OrderQty orderQty = order.getOrderQty();
-		Price price = order.getPrice();
-		Symbol symbol = order.getSymbol();
-		Side side = order.getSide();
-		
 		ExecutionReport ackRep = new ExecutionReport(
 				new OrderID(order.getClOrdID().getValue()), 
 				this.genExecID(order), 
@@ -60,10 +56,47 @@ public class ExchangeSide extends quickfix.MessageCracker implements Application
 			e.printStackTrace();
 		}
 		
-		// TODO: Connect to order book, and add/match as needed
+		// TODO: Connect to order book, and add/match as needed, and send fills when there is a match
 		
-		// TODO: Respond with fills as needed
-		double priceMatch = 100;
+		
+		/*
+		 *  Sending a partial and a full fill for now
+		 */
+		
+		int orderSize = (int) Math.floor(order.getPrice().getValue());
+		Random randGenerator = new Random();
+		int low = 1;
+		
+		// Partial fill
+		double priceMatchForPartialFill = order.getPrice().getValue();
+		double quantitiyForPartialFill = (double) randGenerator.nextInt(orderSize - low) + low;
+		ExecutionReport testPartialFill = new ExecutionReport(
+				new OrderID(order.getClOrdID().getValue()),
+				this.genExecID(order),
+				new ExecTransType(ExecTransType.NEW),
+				new ExecType(ExecType.PARTIAL_FILL),
+				new OrdStatus(OrdStatus.PARTIALLY_FILLED),
+				order.getSymbol(),
+				order.getSide(),
+				new LeavesQty(0),
+				new CumQty(quantitiyForPartialFill),
+				new AvgPx(priceMatchForPartialFill));
+		
+		testPartialFill.set(new LastShares(order.getOrderQty().getValue()));
+		testPartialFill.set(order.getClOrdID());
+		testPartialFill.set(new TransactTime(new Date()));
+		testPartialFill.set(new LastPx(priceMatchForPartialFill));
+		
+		try {
+			this.trySendingMessage(testPartialFill);
+		} catch (SessionNotFound e) {
+			System.out.println("Fill send failed.");
+			e.printStackTrace();
+		}
+		
+		// Full fill
+		double priceMatchForFullFill = order.getPrice().getValue() - 0.5;
+		double quantityForFullFill = orderSize - quantitiyForPartialFill;
 		ExecutionReport testFullFill = new ExecutionReport(
 				new OrderID(order.getClOrdID().getValue()),
 				this.genExecID(order),
@@ -73,16 +106,16 @@ public class ExchangeSide extends quickfix.MessageCracker implements Application
 				order.getSymbol(),
 				order.getSide(),
 				new LeavesQty(0),
-				new CumQty(order.getOrderQty().getValue()),
-				new AvgPx(priceMatch));
+				new CumQty(quantityForFullFill),
+				new AvgPx(priceMatchForFullFill));
 		
 		testFullFill.set(new LastShares(order.getOrderQty().getValue()));
 		testFullFill.set(order.getClOrdID());
 		testFullFill.set(new TransactTime(new Date()));
-		testFullFill.set(new LastPx(priceMatch));
+		testFullFill.set(new LastPx(priceMatchForFullFill));
 		
 		try {
-			this.trySendingMessage(testFullFill);
+			this.trySendingMessage(testPartialFill);
 		} catch (SessionNotFound e) {
 			System.out.println("Fill send failed.");
 			e.printStackTrace();
