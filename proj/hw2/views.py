@@ -76,14 +76,16 @@ def addtrade(request):
         post_data = {'id': id, 'type': type, 'side': side, 'symbol': product, 'price': price, 'lots' : lots}
         requests.post('localhost:8080/fix/process-order', data=post_data)
         new.save()
-        return HttpResponseRedirect('/hw1/?success=true')
+        return HttpResponseRedirect('/hw2/?success=true')
+    else:
+       return render(request, 'hw2/newTrade.html')
 
 def exchange_message(request):
     if request.method == 'POST':
         orderStatus = request.POST.get('OrderStatus', False)
         for key, value in request.POST.iteritems():
             print key + ": " + value + "\n"
-        if orderStatus == "partial fill"
+        if orderStatus == "partial fill":
             tradeid = request.POST.get('ClOrdId', False)
             trade = Trades.objects.get(id=tradeid)
             trade.status = 4;
@@ -92,8 +94,8 @@ def exchange_message(request):
             filled_price = request.POST.get('LastPrice', False)
             filled_id = request.POST.get('ExecID', False);
             filled_time = request.POST.get('TransactionTime', False)
-            new = Portfolio('trade_id': tradeid, 'lots': lots, 'filled_price': filled_price, 'filled_id' = filled_id, 'filled_time': filled_time)
-        else if orderStatus == "complete fill"i
+            new = Portfolio(trade_id =  tradeid, lots = lots, filled_price = filled_price, filled_id  = filled_id, filled_time = filled_time)
+        elif orderStatus == "complete fill":
             tradeid = request.POST.get('ClOrdId', False)
             trade = Trades.objects.get(id=tradeid)
             trade.status = 5;
@@ -102,8 +104,8 @@ def exchange_message(request):
             filled_price = request.POST.get('LastPrice', False)
             filled_id = request.POST.get('ExecID', False) 
             filled_time = request.POST.get('TransactionTime', False)
-            new = Portfolio('trade_id': tradeid, 'lots': lots, 'filled_price': filled_price, 'filled_id' = filled_id, 'filled_time': filled_time) 
-        else if orderStatus == "ack"
+            new = Portfolio(trade_id =  tradeid, lots =  lots, filled_price = filled_price, filled_id = filled_id, filled_time = filled_time) 
+        elif orderStatus == "ack":
             tradeid = request.POST.get('id', False)
             trade = Trades.objects.get(id=tradeid)
             trade.status = 3;
