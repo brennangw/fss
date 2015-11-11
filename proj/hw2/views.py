@@ -82,6 +82,8 @@ def addtrade(request):
 def exchange-message(request):
     if request.method == 'POST':
         orderStatus = request.POST.get('OrderStatus', False)
+        for key, value in request.POST.iteritems():
+            print key + ": " + value + "\n"
         if orderStatus == "partial fill"
             tradeid = request.POST.get('id', False)
             trade = Trades.objects.get(id=tradeid)
