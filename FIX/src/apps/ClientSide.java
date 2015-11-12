@@ -47,6 +47,8 @@ public class ClientSide extends quickfix.MessageCracker implements Application {
 	public void onMessage(quickfix.fix42.ExecutionReport report, SessionID sessionID)
 		      throws FieldNotFound, UnsupportedMessageType, IncorrectTagValue {
 		
+		System.out.println("Received report from exchange. Processing it.");
+		
 		String URL = "http://localhost:8000/hw2/exchange-message";
 		String USER_AGENT = "Eclipse-Tomcat";
 		
@@ -60,7 +62,7 @@ public class ClientSide extends quickfix.MessageCracker implements Application {
 		switch(report.getOrdStatus().getValue()) {
 		case OrdStatus.ACCEPTED_FOR_BIDDING:
 			// Acknowledgement received
-			System.out.println("received ack");
+			System.out.println("Received ack.");
 			
 			params.add(new BasicNameValuePair("ClOrdID", report.getClOrdID().getValue()));
 			params.add(new BasicNameValuePair("OrderID", report.getOrderID().getValue()));
@@ -74,11 +76,22 @@ public class ClientSide extends quickfix.MessageCracker implements Application {
 			break;
 		case OrdStatus.PARTIALLY_FILLED:
 			// Partial fill received
-			System.out.println("received partial fill");
+			System.out.println("Received partial fill.");
+			
+			params.add(new BasicNameValuePair("ClOrdID", report.getClOrdID().getValue()));
+			params.add(new BasicNameValuePair("OrderID", report.getOrderID().getValue()));
+			params.add(new BasicNameValuePair("ExecID", report.getExecID().getValue()));
+			params.add(new BasicNameValuePair("ExecType", String.valueOf(report.getExecType().getValue())));
+			params.add(new BasicNameValuePair("OrderStatus", String.valueOf(report.getOrdStatus().getValue())));
+			params.add(new BasicNameValuePair("Symbol", report.getSymbol().getValue()));
+			params.add(new BasicNameValuePair("Side", report.getSide().toString()));
+			params.add(new BasicNameValuePair("TransactionTime", report.getTransactTime().getValue().toString()));
+			params.add(new BasicNameValuePair("LastShares", String.valueOf(report.getLastShares().getValue())));
+			params.add(new BasicNameValuePair("LastPrice", String.valueOf(report.getLastPx().getValue())));
 			
 		case OrdStatus.FILLED:
 			// Full fill received
-			System.out.println("received full fill");
+			System.out.println("Received full fill.");
 			
 			params.add(new BasicNameValuePair("ClOrdID", report.getClOrdID().getValue()));
 			params.add(new BasicNameValuePair("OrderID", report.getOrderID().getValue()));
@@ -97,7 +110,7 @@ public class ClientSide extends quickfix.MessageCracker implements Application {
 			return;
 		}
 		
-		try {
+		/*try {
 			// Attaching the parameters and sending the data to python
 			post.setEntity(new UrlEncodedFormEntity(params));
 			HttpResponse resp = httpClient.execute(post);
@@ -112,7 +125,7 @@ public class ClientSide extends quickfix.MessageCracker implements Application {
 		} catch (IOException e) {
 			System.out.println("Could not send request to client - IO exception");
 			e.printStackTrace();
-		}
+		}*/
 		
 	}
 	

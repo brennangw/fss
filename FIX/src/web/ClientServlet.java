@@ -20,7 +20,7 @@ public class ClientServlet extends HttpServlet {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		PrintWriter pw = resp.getWriter();
 		JSONObject ret = new JSONObject();
 		

@@ -4,6 +4,7 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import main.StartParties;
+import quickfix.SessionNotFound;
 
 public class InitializeParties implements ServletContextListener {
 
@@ -14,10 +15,12 @@ public class InitializeParties implements ServletContextListener {
 
 	@Override
 	public void contextInitialized(ServletContextEvent arg0) {
-		//Notification that the web application initialization process is starting
-		
-		StartParties.main();
-		System.out.println("Session started between the client and the exchange.");
+		try {
+			StartParties.main();
+		} catch (SessionNotFound e) {
+			System.out.println("No session to send test message");
+			e.printStackTrace();
+		}
 	}
 
 }

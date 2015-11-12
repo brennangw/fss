@@ -32,7 +32,8 @@ public class ExchangeSide extends quickfix.MessageCracker implements Application
 	
 	public void onMessage(quickfix.fix42.NewOrderSingle order, SessionID sessionID)
 		      throws FieldNotFound, UnsupportedMessageType, IncorrectTagValue {
-
+		System.out.println("Got new order message.");
+		System.out.println("Sending ack.");
 		ExecutionReport ackRep = new ExecutionReport(
 				new OrderID(order.getClOrdID().getValue()), 
 				this.genExecID(order), 
@@ -58,7 +59,6 @@ public class ExchangeSide extends quickfix.MessageCracker implements Application
 		
 		// TODO: Connect to order book, and add/match as needed, and send fills when there is a match
 		
-		
 		/*
 		 *  Sending a partial and a full fill for now
 		 */
@@ -68,6 +68,7 @@ public class ExchangeSide extends quickfix.MessageCracker implements Application
 		int low = 1;
 		
 		// Partial fill
+		System.out.println("Sending partial fill.");
 		double priceMatchForPartialFill = order.getPrice().getValue();
 		double quantitiyForPartialFill = (double) randGenerator.nextInt(orderSize - low) + low;
 		ExecutionReport testPartialFill = new ExecutionReport(
@@ -95,6 +96,7 @@ public class ExchangeSide extends quickfix.MessageCracker implements Application
 		}
 		
 		// Full fill
+		System.out.println("Sending full fill.");
 		double priceMatchForFullFill = order.getPrice().getValue() - 0.5;
 		double quantityForFullFill = orderSize - quantitiyForPartialFill;
 		ExecutionReport testFullFill = new ExecutionReport(

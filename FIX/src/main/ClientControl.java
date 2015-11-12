@@ -24,29 +24,14 @@ public class ClientControl {
 	    Application application = new ClientSide();
 
 	    try {
-	    SessionSettings clientSettings = new SessionSettings(new FileInputStream(clientFile));
-	    MessageStoreFactory clientStoreFactory = new FileStoreFactory(clientSettings);
-	    LogFactory clientLogFactory = new FileLogFactory(clientSettings);
-	    MessageFactory clientMessageFactory = new DefaultMessageFactory();
-	    client = new SocketInitiator
-	      (application, clientStoreFactory, clientSettings, clientLogFactory, clientMessageFactory);
-	    
-	    client.start();
-	    
-	    // Sending test request
-	    quickfix.fix42.NewOrderSingle mess = new quickfix.fix42.NewOrderSingle (
-				new ClOrdID("321"),
-				new HandlInst(HandlInst.MANUAL_ORDER),
-				new Symbol("XYZ"),
-				new Side(Side.BUY),
-				new TransactTime(new Date()), 
-				new OrdType(OrdType.MARKET));
-		
-		mess.set(new Price(Double.parseDouble("200")));
-		mess.set(new OrderQty(Double.parseDouble("50")));
-
-		Session.sendToTarget(mess, "CL", "EX");
-	   
+		    SessionSettings clientSettings = new SessionSettings(new FileInputStream(clientFile));
+		    MessageStoreFactory clientStoreFactory = new FileStoreFactory(clientSettings);
+		    LogFactory clientLogFactory = new FileLogFactory(clientSettings);
+		    MessageFactory clientMessageFactory = new DefaultMessageFactory();
+		    client = new SocketInitiator
+		      (application, clientStoreFactory, clientSettings, clientLogFactory, clientMessageFactory);
+		    
+		    client.start();
 	    } catch(Exception e) {
 	    	e.printStackTrace();
 	    }
