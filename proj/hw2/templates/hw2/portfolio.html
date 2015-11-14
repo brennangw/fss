@@ -23,14 +23,14 @@
   {% include 'hw2/nav.html' %}
   <div class="container">
 
-    <h1>Portfolio</h1>
+    <h1>Get Filled Trades History</h1>
     <form role="form" action="/hw2/portfolio/" method="post">
       {% csrf_token %}
       <div class="form-group">
         <label for="traderid">Trader ID:</label>
         <input type="text" class="form-control" id="traderid" name="traderid">
       </div>
-      <button type="submit" class="btn btn-default">Get Aggregate</button>
+      <button type="submit" class="btn btn-default">Get Filled Trades</button>
     </form>
 
   </div>

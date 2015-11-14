@@ -87,7 +87,7 @@ def exchange_message(request):
             print key + ": " + value + "\n"
         if orderStatus == "partial fill":
             tradeid = request.POST.get('ClOrdId', False)
-            trade = Trades.objects.get(id=tradeid)
+            trade = Trade.objects.get(id=tradeid)
             trade.status = 4
             trade.save();
             lots = request.POST.get('LastShares', False)
@@ -113,7 +113,7 @@ def exchange_message(request):
 
 def fixAck(request):
     tradeid = request.POST.get('id', False)
-    trade = Trades.objects.get(id=tradeid)
+    trade = Trade.objects.get(id=tradeid)
     trade.status = 2;
     trade.save();
 
@@ -128,11 +128,11 @@ def aggregate(request):
         traderid=request.POST['traderid']
         cursor=connection.cursor()
         if (traderid == ""):
-            cursor.execute("select product_code, month_code, year,sum(lots*buy_or_sell) from trade group by product_code, month_code, year")
-            header=['Product','Month','Year','Aggregate']
+            cursor.execute("select td.trader as trader_id, max(cl.first_name) as `First Name`, max(cl.last_name) as `Last Name`, concat(td.`product_code`,td.`month_code`,td.year) as product, sum(pt.lots*td.`buy_or_sell`) as `Aggregate Position`, max(mp.`price`) as market_price, sum(pt.`filled_price`*pt.lots*td.`buy_or_sell`) as `Aggregate Purchase Cost`, sum(pt.lots*td.`buy_or_sell`)*max(mp.price) as `Asset Net Worth` from portfolio as pt left join trade as td on pt.trade_id = td.id left join market_price as mp on td.product_code = mp.`product_code` and td.month_code = mp.month and td.year = mp.year left join clients as cl on td.trader=cl.id group by trader_id, product")
+            header=['Trade_ID','First_Name','Last_Name','Product','Aggregate_Position','Market_Price','Aggregate_Purchase_Cost','Asset_Net_Worth']
         else:
-            cursor.execute("select product_code, month_code, year,sum(lots*buy_or_sell) from trade where trader=%s group by product_code, month_code, year",[traderid])
-            header=['Product','Month','Year','Aggregate']
+            cursor.execute("select td.trader as trader_id, max(cl.first_name) as `First Name`, max(cl.last_name) as `Last Name`, concat(td.`product_code`,td.`month_code`,td.year) as product, sum(pt.lots*td.`buy_or_sell`) as `Aggregate Position`, max(mp.`price`) as market_price, sum(pt.`filled_price`*pt.lots*td.`buy_or_sell`) as `Aggregate Purchase Cost`, sum(pt.lots*td.`buy_or_sell`)*max(mp.price) as `Asset Net Worth` from portfolio as pt left join trade as td on pt.trade_id = td.id left join market_price as mp on td.product_code = mp.`product_code` and td.month_code = mp.month and td.year = mp.year left join clients as cl on td.trader=cl.id where td.trader=%s group by trader_id, product",[traderid])
+            header=['Trade_ID','First_Name','Last_Name','Product','Aggregate_Position','Market_Price','Aggregate_Purchase_Cost','Asset_Net_Worth']
 
         aggregate_position = cursor.fetchall()
 
@@ -157,14 +157,14 @@ def history(request):
         traderid=request.POST['traderid']
         cursor=connection.cursor()
         if (traderid == ""):
-            cursor.execute("select * from trade")
-            header=['Trade_ID','Time','Product','Month','Year','Lots','Price (in cents)','Buy(+1)/Sell(-1)','Trader_ID']
+            cursor.execute("select td.trader as trader_id, cl.first_name, cl.last_name, concat(td.`product_code`,td.`month_code`,td.year) as product,pt.filled_time,td.`buy_or_sell`, pt.lots,pt.`filled_price`,mp.`price` as market_price from portfolio as pt left join trade as td on pt.trade_id = td.id left join market_price as mp on td.product_code = mp.`product_code` and td.month_code = mp.month and td.year = mp.year left join clients as cl on td.trader=cl.id;")
+            header=['Trade_ID','First_Name','Last_Name','Product','Filled_Time','Buy(+1)/Sell(-1)','Lots','Filled_Price (in cents)','Market_Price']
         else:
-            cursor.execute("select * from trade where trader= %s",[traderid])
-            header=['Trade_ID','Time','Product','Month','Year','Lots','Price (in cents)','Buy(+1)/Sell(-1)','Trader_ID']
+            cursor.execute("select td.trader as trader_id, cl.first_name, cl.last_name, concat(td.`product_code`,td.`month_code`,td.year) as product,pt.filled_time,td.`buy_or_sell`, pt.lots,pt.`filled_price`,mp.`price` as market_price from portfolio as pt left join trade as td on pt.trade_id = td.id left join market_price as mp on td.product_code = mp.`product_code` and td.month_code = mp.month and td.year = mp.year left join clients as cl on td.trader=cl.id where td.trader= %s",[traderid])
+            header=['Trade_ID','First_Name','Last_Name','Product','Filled_Time','Buy(+1)/Sell(-1)','Lots','Filled_Price (in cents)','Market_Price']
         aggregate_position = cursor.fetchall()
         response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachement; filename="aggregate.csv"'
+        response['Content-Disposition'] = 'attachement; filename="history.csv"'
         writer = csv.writer(response)
         writer.writerow(header)
         for i in range(len(aggregate_position)):
@@ -185,11 +185,11 @@ def pnl(request):
         traderid=request.POST['traderid']
         cursor=connection.cursor()
         if (traderid == ""):
-            cursor.execute("select * from trade")
-            header=['Trade_ID','Time','Product','Month','Year','Lots','Price (in cents)','Buy(+1)/Sell(-1)','Trader_ID']
+            cursor.execute("select td.trader as trader_id, cl.first_name, cl.last_name, concat(td.`product_code`,td.`month_code`,td.year) as product,pt.filled_time,td.`buy_or_sell`, pt.lots,pt.`filled_price`,mp.`price` as market_price, (mp.`price`-pt.`filled_price`)*td.`buy_or_sell` as `PnL per lot`, (mp.`price`-pt.`filled_price`)*`buy_or_sell`*pt.lots as `PnL per Trade` from portfolio as pt left join trade as td on pt.trade_id = td.id left join market_price as mp on td.product_code = mp.`product_code` and td.month_code = mp.month and td.year = mp.year left join clients as cl on td.trader=cl.id")
+            header=['Trade_ID','First_Name','Last_Name','Product','Filled_Time','Buy(+1)/Sell(-1)','Lots','Filled_Price (in cents)','Market_Price','PnL_per_Lot','PnL_per_Trade']
         else:
-            cursor.execute("select * from trade where trader= %s",[traderid])
-            header=['Trade_ID','Time','Product','Month','Year','Lots','Price (in cents)','Buy(+1)/Sell(-1)','Trader_ID']
+            cursor.execute("select td.trader as trader_id, cl.first_name, cl.last_name, concat(td.`product_code`,td.`month_code`,td.year) as product,pt.filled_time,td.`buy_or_sell`, pt.lots,pt.`filled_price`,mp.`price` as market_price, (mp.`price`-pt.`filled_price`)*td.`buy_or_sell` as `PnL per lot`, (mp.`price`-pt.`filled_price`)*`buy_or_sell`*pt.lots as `PnL per Trade` from portfolio as pt left join trade as td on pt.trade_id = td.id left join market_price as mp on td.product_code = mp.`product_code` and td.month_code = mp.month and td.year = mp.year left join clients as cl on td.trader=cl.id where td.trader=%s",[traderid])
+            header=['Trade_ID','First_Name','Last_Name','Product','Filled_Time','Buy(+1)/Sell(-1)','Lots','Filled_Price (in cents)','Market_Price','PnL_per_Lot','PnL_per_Trade']
         aggregate_position = cursor.fetchall()
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachement; filename="pnl.csv"'
@@ -213,11 +213,11 @@ def portfolio(request):
         traderid=request.POST['traderid']
         cursor=connection.cursor()
         if (traderid == ""):
-            cursor.execute("select * from trade")
-            header=['Trade_ID','Time','Product','Month','Year','Lots','Price (in cents)','Buy(+1)/Sell(-1)','Trader_ID']
+            cursor.execute("select td.trader as trader_id, cl.first_name, cl.last_name, concat(td.`product_code`,td.`month_code`,td.year) as product,td.`buy_or_sell`, pt.lots,pt.`filled_price`,mp.`price` as market_price from portfolio as pt left join trade as td on pt.trade_id = td.id left join market_price as mp on td.product_code = mp.`product_code` and td.month_code = mp.month and td.year = mp.year left join clients as cl on td.trader=cl.id")
+            header=['Trade_ID','First_Name','Last_Name','Product','Buy_or_Sell','Lots','Filled_Price (in cents)', 'Market_Price']
         else:
-            cursor.execute("select * from trade where trader= %s",[traderid])
-            header=['Trade_ID','Time','Product','Month','Year','Lots','Price (in cents)','Buy(+1)/Sell(-1)','Trader_ID']
+            cursor.execute("select td.trader as trader_id, cl.first_name, cl.last_name, concat(td.`product_code`,td.`month_code`,td.year) as product,td.`buy_or_sell`, pt.lots,pt.`filled_price`,mp.`price` as market_price from portfolio as pt left join trade as td on pt.trade_id = td.id left join market_price as mp on td.product_code = mp.`product_code` and td.month_code = mp.month and td.year = mp.year left join clients as cl on td.trader=cl.id where td.trader= %s",[traderid])
+            header=['Trade_ID','First_Name','Last_Name','Product','Buy_or_Sell','Lots','Filled_Price (in cents)', 'Market_Price']
         aggregate_position = cursor.fetchall()
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachement; filename="portfolio.csv"'
@@ -229,3 +229,87 @@ def portfolio(request):
         return response
 
     return render(request, 'hw2/portfolio.html')
+
+def pnlbytrade(request):
+    """
+    API interface: Request handler for getting the trade history of a single trader, or all trade histories from :model:`hw1.Trades`.
+
+        Required parameters: Trader_ID (unique ID or a blank field)
+
+    """
+    if request.method == 'POST':
+        traderid=request.POST['traderid']
+        cursor=connection.cursor()
+        if (traderid == ""):
+            cursor.execute("select td.trader as trader_id, cl.first_name, cl.last_name, concat(td.`product_code`,td.`month_code`,td.year) as product,td.`buy_or_sell`, pt.lots,pt.`filled_price`,mp.`price` as market_price, (mp.`price`-pt.`filled_price`)*(case td.`buy_or_sell` when 1 then 1 else -1 end) as `PnL per lot`, (mp.`price`-pt.`filled_price`)*(case td.`buy_or_sell` when 1 then 1 else -1 end)*pt.lots as `PnL per Trade` from portfolio as pt left join trade as td on pt.trade_id = td.id left join market_price as mp on td.product_code = mp.`product_code` and td.month_code = mp.month and td.year = mp.year left join clients as cl on td.trader=cl.id")
+            header=['Trade_ID','First_Name','Last_Name','Product','Buy_or_Sell','Lots','Filled_Price (in cents)', 'Market_Price', 'PnL_per_Lot','PnL_per_Trade']
+        else:
+            cursor.execute("select td.trader as trader_id, cl.first_name, cl.last_name, concat(td.`product_code`,td.`month_code`,td.year) as product,td.`buy_or_sell`, pt.lots,pt.`filled_price`,mp.`price` as market_price, (mp.`price`-pt.`filled_price`)*(case td.`buy_or_sell` when 1 then 1 else -1 end) as `PnL per lot`, (mp.`price`-pt.`filled_price`)*(case td.`buy_or_sell` when 1 then 1 else -1 end)*pt.lots as `PnL per Trade` from portfolio as pt left join trade as td on pt.trade_id = td.id left join market_price as mp on td.product_code = mp.`product_code` and td.month_code = mp.month and td.year = mp.year left join clients as cl on td.trader=cl.id where td.trader= %s",[traderid])
+            header=['Trade_ID','First_Name','Last_Name','Product','Buy_or_Sell','Lots','Filled_Price (in cents)', 'Market_Price','PnL_per_Lot','PnL_per_Trade']
+        aggregate_position = cursor.fetchall()
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachement; filename="pnlbytrade.csv"'
+        writer = csv.writer(response)
+        writer.writerow(header)
+        for i in range(len(aggregate_position)):
+            writer.writerow(aggregate_position[i])
+
+        return response
+
+    return render(request, 'hw2/pnlbytrade.html')
+
+def pnlbytrader(request):
+    """
+    API interface: Request handler for getting the trade history of a single trader, or all trade histories from :model:`hw1.Trades`.
+
+        Required parameters: Trader_ID (unique ID or a blank field)
+
+    """
+    if request.method == 'POST':
+        traderid=request.POST['traderid']
+        cursor=connection.cursor()
+        if (traderid == ""):
+            cursor.execute("select td.trader as trader_id, max(cl.first_name) as `First Name`, max(cl.last_name) as `Last Name`, sum((mp.`price`-pt.`filled_price`)*(case td.`buy_or_sell` when 1 then 1 else -1 end)*pt.lots) as `PnL for Trader` from portfolio as pt left join trade as td on pt.trade_id = td.id left join market_price as mp on td.product_code = mp.`product_code` and td.month_code = mp.month and td.year = mp.year left join clients as cl on td.trader=cl.id group by td.trader")
+            header=['Trade_ID','First_Name','Last_Name','PnL_for_Trader']
+        else:
+            cursor.execute("select td.trader as trader_id, max(cl.first_name) as `First Name`, max(cl.last_name) as `Last Name`, sum((mp.`price`-pt.`filled_price`)*(case td.`buy_or_sell` when 1 then 1 else -1 end)*pt.lots) as `PnL for Trader` from portfolio as pt left join trade as td on pt.trade_id = td.id left join market_price as mp on td.product_code = mp.`product_code` and td.month_code = mp.month and td.year = mp.year left join clients as cl on td.trader=cl.id where td.trader= %s group by td.trader",[traderid])
+            header=['Trade_ID','First_Name','Last_Name','PnL_for_Trader']
+        aggregate_position = cursor.fetchall()
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachement; filename="pnlbytrader.csv"'
+        writer = csv.writer(response)
+        writer.writerow(header)
+        for i in range(len(aggregate_position)):
+            writer.writerow(aggregate_position[i]);
+
+        return response
+
+    return render(request, 'hw2/pnlbytrader.html')
+
+def pnlbyproduct(request):
+    """
+    API interface: Request handler for getting the trade history of a single trader, or all trade histories from :model:`hw1.Trades`.
+
+        Required parameters: Trader_ID (unique ID or a blank field)
+
+    """
+    if request.method == 'POST':
+        traderid=request.POST['traderid']
+        cursor=connection.cursor()
+        if (traderid == ""):
+            cursor.execute("select td.trader as trader_id, max(cl.first_name) as `First Name`, max(cl.last_name) as `Last Name`, concat(td.`product_code`,td.`month_code`,td.year) as product,td.`buy_or_sell`, sum(pt.lots*(case td.`buy_or_sell` when 1 then 1 else -1 end)) as `Aggregate Position`,(case sum(pt.lots*(case td.`buy_or_sell` when 1 then 1 else -1 end)) when 0 then 0 else sum(pt.`filled_price`*pt.lots*(case td.`buy_or_sell` when 1 then 1 else -1 end)) end)/sum(pt.lots*(case td.`buy_or_sell` when 1 then 1 else -1 end)) as `Average Holding Price`,max(mp.`price`) as market_price, (case sum(pt.lots*(case td.`buy_or_sell` when 1 then 1 else -1 end)) when 0 then 0 else sum((mp.`price`-pt.`filled_price`)*pt.lots*(case td.`buy_or_sell` when 1 then 1 else -1 end))/sum(pt.lots*(case td.`buy_or_sell` when 1 then 1 else -1 end))  end) as `PnL per lot`, sum((mp.`price`-pt.`filled_price`)*pt.lots*(case td.`buy_or_sell` when 1 then 1 else -1 end)) as `PnL per Trade` from portfolio as pt left join trade as td on pt.trade_id = td.id left join market_price as mp on td.product_code = mp.`product_code` and td.month_code = mp.month and td.year = mp.year left join clients as cl on td.trader=cl.id group by trader_id, product")
+            header=['Trade_ID','First_Name','Last_Name','Product','Buy_or_Sell','Aggregate_Position','Average_Holding_Price', 'Market_Price','PnL_per_Lot','PnL_per_Product']
+        else:
+            cursor.execute("select td.trader as trader_id, max(cl.first_name) as `First Name`, max(cl.last_name) as `Last Name`, concat(td.`product_code`,td.`month_code`,td.year) as product,td.`buy_or_sell`, sum(pt.lots*(case td.`buy_or_sell` when 1 then 1 else -1 end)) as `Aggregate Position`,(case sum(pt.lots*(case td.`buy_or_sell` when 1 then 1 else -1 end)) when 0 then 0 else sum(pt.`filled_price`*pt.lots*(case td.`buy_or_sell` when 1 then 1 else -1 end)) end)/sum(pt.lots*(case td.`buy_or_sell` when 1 then 1 else -1 end)) as `Average Holding Price`,max(mp.`price`) as market_price, (case sum(pt.lots*(case td.`buy_or_sell` when 1 then 1 else -1 end)) when 0 then 0 else sum((mp.`price`-pt.`filled_price`)*pt.lots*(case td.`buy_or_sell` when 1 then 1 else -1 end))/sum(pt.lots*(case td.`buy_or_sell` when 1 then 1 else -1 end))  end) as `PnL per lot`, sum((mp.`price`-pt.`filled_price`)*pt.lots*(case td.`buy_or_sell` when 1 then 1 else -1 end)) as `PnL per Trade` from portfolio as pt left join trade as td on pt.trade_id = td.id left join market_price as mp on td.product_code = mp.`product_code` and td.month_code = mp.month and td.year = mp.year left join clients as cl on td.trader=cl.id where td.trader= %s group by trader_id, product",[traderid])
+            header=['Trade_ID','First_Name','Last_Name','Product','Buy_or_Sell','Aggregate_Position','Average_Holding_Price', 'Market_Price','PnL_per_Lot','PnL_per_Product']
+        aggregate_position = cursor.fetchall()
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachement; filename="pnlbyproduct.csv"'
+        writer = csv.writer(response)
+        writer.writerow(header)
+        for i in range(len(aggregate_position)):
+            writer.writerow(aggregate_position[i]);
+
+        return response
+
+    return render(request, 'hw2/pnlbyproduct.html')

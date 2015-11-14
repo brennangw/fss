@@ -22,9 +22,9 @@
 
   {% include 'hw2/nav.html' %}
   <div class="container">
-  <h1>Get History</h1>
+  <h1>Get All Historical Fills</h1>
     <div id="sec-history" class="section">
-      <form role="historyform" id="historyform" action="/hw1/history/" method="post">
+      <form role="historyform" id="historyform" action="/hw2/history/" method="post">
         {% csrf_token %}
         <div class="form-group">
           <label for="traderid">Trader ID (leave blank for overall history):</label>

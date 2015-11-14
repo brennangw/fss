@@ -7,10 +7,12 @@
     	    <ul class="nav navbar-nav">
                 <li id="trader"><a href="{% url 'addtrader' %}">Add Trader</a></li>
 	            <li id="trade"><a href="{% url 'addtrade' %}">Add Trade</a></li>
-	            <li id="aggregate"><a href="{% url 'aggregate' %}">Get aggregate</a></li>
-	            <li id="history"><a href="{% url 'history' %}">Get history</a></li>
-                <li id="portfolio"><a href="{% url 'portfolio' %}">Portfolios</a></li>
-                <li id="pnl"><a href="{% url 'pnl' %}">PnL</a></li>
+                <li id="history"><a href="{% url 'history' %}">Get All Fills</a></li>
+	            <li id="aggregate"><a href="{% url 'aggregate' %}">Get Aggregate (w. Price)</a></li>
+                <li id="pnl"><a href="{% url 'pnl' %}">PnL Report</a></li>
+                <li id="pnlbytrader"><a href="{% url 'pnlbytrader' %}">Explain PnL by Trader</a></li>
+                <li id="pnlbytrade"><a href="{% url 'pnlbytrade' %}">Explain PnL by Trade</a></li>
+                <li id="pnlbyproduct"><a href="{% url 'pnlbyproduct' %}">Explain PnL by Product</a></li>
         	</ul>
 		</div>
       </div>
