@@ -1,17 +1,6 @@
 package main;
 
-import java.util.Date;
-
-import quickfix.Session;
 import quickfix.SessionNotFound;
-import quickfix.field.ClOrdID;
-import quickfix.field.HandlInst;
-import quickfix.field.OrdType;
-import quickfix.field.OrderQty;
-import quickfix.field.Price;
-import quickfix.field.Side;
-import quickfix.field.Symbol;
-import quickfix.field.TransactTime;
 
 public class StartParties {
 
