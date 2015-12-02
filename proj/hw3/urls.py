@@ -8,4 +8,14 @@ urlpatterns = [
     url(r'^$',views.index, name='index'),
     url(r'^addSwap/',views.addSwap, name='addSwap'),
     url(r'^EOD/',views.EODProcess, name='EOD'),
+    url(r'^addtrader/',views.addtrader, name='addtrader'),
+    url(r'^addtrade/',views.addtrade, name='addtrade'),
+    url(r'^aggregate/',views.aggregate, name='aggregate'),
+    url(r'^history/',views.history, name='history'),
+    url(r'^portfolio/',views.portfolio, name='portfolio'),
+    url(r'^pnl/',views.pnl, name='pnl'),
+    url(r'^pnlbytrade/',views.pnlbytrade, name='pnlbytrade'),
+    url(r'^pnlbytrader/',views.pnlbytrader, name='pnlbytrader'),
+    url(r'^pnlbyproduct/',views.pnlbyproduct, name='pnlbyproduct'),
+    url(r'^exchange-message/',views.exchange_message, name='message-from-exchange')
 ]
