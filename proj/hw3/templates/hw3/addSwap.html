@@ -27,50 +27,44 @@
       <form role="swapaddform" id="swapaddform" action="/hw3/addswap/" method="post">
         {% csrf_token %}
         <div class="form-group">
-          <label for="code">Product Code:</label> <br>
-          <input type="text" class="form-control" id="code" name="product" value="HH">
+          <label for="start day">Start Date</label> <br>
+          <input type="date" class="form-control" id="start" name="start">
         </div>
         <div class="form-group">
-          <label for="month">Month:</label>
-          <select class="form-control" id="month" name="month">
-            <option>F</option>
-            <option>G</option>
-            <option>H</option>
-            <option>J</option>
-            <option>K</option>
-            <option>M</option>
-            <option>N</option>
-            <option>Q</option>
-            <option>U</option>
-            <option>V</option>
-            <option>X</option>
-            <option>Z</option>
+          <label for="termination day">Termination Date</label> <br>
+          <input type="date" class="form-control" id="termination" name="termination">
+        </div>
+        <div class="form-group">
+          <label for="notional amount">Notional Amount:</label>
+          <input type="number" class="form-control" id="notional" name="notional">
+        </div>
+        <div class="form-group">
+          <label for="fixed rate">Fixed Rate:</label>
+          <input type="number" class="form-control" id="fixed" name="fixed">
+        </div>
+        <div class="form-group">
+          <label for="floating rate">Floating Rate Index:</label>
+          <input type="text" class="form-control" id="float" name="float">
+        </div>
+        <div class="form-group">
+          <label for="float spread">Float Spread:</label>
+          <input type="number" class="form-control" id="spread" name="spread">
+        </div>
+        <div class="form-group">
+          <label for="fixed payer">Fixed Rate Payer:</label>
+          <select class="form-control" id="payer" name="payer">
+            <option>You</option>
+            <option>Clearing House</option>
           </select>
         </div>
         <div class="form-group">
-          <label for="year">Year:</label>
-          <input type="number" class="form-control" id="year" name="year" value="2015">
-        </div>
-        <div class="form-group">
-          <label for="email">Lots:</label>
-          <input type="number" class="form-control" id="lots" name="lots" value="1">
-        </div>
-        <div class="form-group">
-          <label for="email">Price (in cents):</label>
-          <input type="number" class="form-control" id="price" name="price">
-        </div>
-        <div class="form-group">
-          <label for="email">Buy/Sell:</label>
-          <select class="form-control" id="sign" name="sign">
-            <option>Buy</option>
-            <option>Sell</option>
+          <label for="clearing house">Clearing House:</label>
+          <select class="form-control" id="clearing" name="clearing">
+            <option>CME</option>
+            <option>LCH</option>
           </select>
         </div>
-		<div class="form-group">
-			<label for="email">Type:(1 for Market Order, 2 for Limit Order, 3 for Pegged Order) </label>
-			<input type="number" class="form-control" id="type" name="type">
-		</div>
-        <div class="form-group">
+		    <div class="form-group">
           <label for="email">Trader ID:</label>
           <input type="number" class="form-control" id="trader" name="trader">
         </div>
