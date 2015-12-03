@@ -11,6 +11,46 @@ from __future__ import unicode_literals
 
 from django.db import models
 
+class Swaps(models.Model):
+    id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
+    startdate = models.DateField(db_column='StartDate', blank=True, null=True)  # Field name made lowercase.
+    terminationdate = models.DateField(db_column='TerminationDate', blank=True, null=True)  # Field name made lowercase.
+    fixedrate = models.FloatField(db_column='FixedRate', blank=True, null=True)  # Field name made lowercase.
+    floatrate = models.CharField(db_column='FloatRate', max_length=5, blank=True, null=True)  # Field name made lowercase.
+    floatspread = models.FloatField(db_column='FloatSpread', blank=True, null=True)  # Field name made lowercase.
+    notional = models.FloatField(db_column='Notional', blank=True, null=True)  # Field name made lowercase.
+    fixedpayer = models.CharField(db_column='FixedPayer', max_length=3, blank=True, null=True)  # Field name made lowercase.
+    clearinghouse = models.CharField(db_column='ClearingHouse', max_length=3, blank=True, null=True)  # Field name made lowercase.
+    traderid = models.ForeignKey('Clients', models.DO_NOTHING, db_column='TraderID', blank=True, null=True)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'Swaps'
+
+
+class Calendar(models.Model):
+    date = models.DateField(primary_key=True)
+    day_of_the_week = models.CharField(max_length=11, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'calendar'
+
+class Holiday(models.Model):
+    date = models.DateField(primary_key=True)
+    holiday = models.CharField(max_length=30, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'holiday'
+
+class Currentbussinessday(models.Model):
+    date = models.DateField(primary_key=True)
+
+    class Meta:
+        managed = False
+        db_table = 'currentbussinessday'
+
 class Clients(models.Model):
     """
     Stores information about all traders in :model:`hw1.Clients`.
