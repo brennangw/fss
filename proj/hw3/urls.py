@@ -11,6 +11,7 @@ urlpatterns = [
     url(r'^addtrader/',views.addtrader, name='addtrader'),
     url(r'^addtrade/',views.addtrade, name='addtrade'),
     url(r'^aggregate/',views.aggregate, name='aggregate'),
+    url(r'^aggregateSwaps/',views.aggregateSwaps, name='aggregateSwaps'),
     url(r'^history/',views.history, name='history'),
     url(r'^portfolio/',views.portfolio, name='portfolio'),
     url(r'^pnl/',views.pnl, name='pnl'),

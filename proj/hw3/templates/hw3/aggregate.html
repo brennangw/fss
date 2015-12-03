@@ -30,7 +30,16 @@
         <label for="traderid">Trader ID:</label>
         <input type="text" class="form-control" id="traderid" name="traderid">
       </div>
-      <button type="submit" class="btn btn-default">Get Aggregate</button>
+      <button type="submit" class="btn btn-default">Get Aggregate for Futures</button>
+    </form>
+
+    <form role="form" action="/hw3/aggregateSwaps/" method="post">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="traderid">Trader ID:</label>
+        <input type="text" class="form-control" id="traderid" name="traderid">
+      </div>
+      <button type="submit" class="btn btn-default">Get Aggregate for Swaps</button>
     </form>
 
   </div>

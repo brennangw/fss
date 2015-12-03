@@ -172,9 +172,33 @@ def aggregate(request):
         writer.writerow(header)
         for i in range(len(aggregate_position)):
             writer.writerow(aggregate_position[i])
+
         return response
     
     return render(request, 'hw3/aggregate.html')
+
+def aggregateSwaps(request):
+    if request.method == 'POST':
+        traderid=request.POST['traderid']
+        cursor=connection.cursor()
+        
+        if traderid == "":
+            cursor.execute("select * from Swaps")
+        else:
+            cursor.execute("select * from Swaps where TraderID=%s",[traderid])
+
+        header=['Swap_ID','Start Date','Termination date','Fixed Rate','Float Rate','Float Spread','Notional','Who Pays Fixed','Clearing House','Trader']
+        aggregate_position = cursor.fetchall()
+
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="aggregate.csv"'
+        writer = csv.writer(response)
+        writer.writerow(header)
+        for i in range(len(aggregate_position)):
+            writer.writerow(aggregate_position[i])
+
+        return response
+
 
 def history(request):
     """
