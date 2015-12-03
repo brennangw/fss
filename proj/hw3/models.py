@@ -21,7 +21,7 @@ class Swaps(models.Model):
     notional = models.FloatField(db_column='Notional', blank=True, null=True)  # Field name made lowercase.
     fixedpayer = models.CharField(db_column='FixedPayer', max_length=3, blank=True, null=True)  # Field name made lowercase.
     clearinghouse = models.CharField(db_column='ClearingHouse', max_length=3, blank=True, null=True)  # Field name made lowercase.
-    traderid = models.ForeignKey('Clients', models.DO_NOTHING, db_column='TraderID', blank=True, null=True)  # Field name made lowercase.
+    traderid = models.ForeignKey('Clients', db_column='TraderID', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False

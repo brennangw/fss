@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
-from .models import Clients, Trade, Portfolio
+from .models import Clients, Trade, Portfolio, Swaps
 import csv
 from django.db import connection
 import time
@@ -21,8 +21,22 @@ def index(request):
 def addSwap(request):
     if request.method == 'POST':
         #TODO: Get the parameters of the swap and enter into the database
+        start = request.POST.get('start', False)
+        termination = request.POST.get('termination', False)
+        fixed = request.POST.get('fixed', False)
+        float_idx = request.POST.get('float', False)
+        spread = request.POST.get('spread', False)
+        notional = request.POST.get('notional', False)
+        payer = request.POST.get('payer', False)
+        clearing = request.POST.get('clearing', False)
+        trader_id = request.POST.get('trader', False)
 
-        return render(request, 'hw3/?success=true')
+        trader= Clients.objects.get(id=trader_id)
+
+        new = Swaps(startdate=start, terminationdate=termination, fixedrate=fixed, floatrate=float_idx, floatspread=spread, notional=notional, fixedpayer=payer, clearinghouse=clearing, traderid = trader)
+        new.save()
+
+        return HttpResponseRedirect('/hw3/?success=true')
 
     return render(request, 'hw3/addSwap.html')
 

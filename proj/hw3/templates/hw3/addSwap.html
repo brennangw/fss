@@ -24,31 +24,31 @@
   <div class="container">
     <h1>Add Swap</h1>
     <div id="sec-addswap" class="section">
-      <form role="swapaddform" id="swapaddform" action="/hw3/addswap/" method="post">
+      <form role="swapaddform" id="swapaddform" action="/hw3/addSwap/" method="post">
         {% csrf_token %}
         <div class="form-group">
           <label for="start day">Start Date</label> <br>
-          <input type="date" class="form-control" id="start" name="start">
+          <input type="date" class="form-control" id="start" name="start" value="12/3/2015">
         </div>
         <div class="form-group">
           <label for="termination day">Termination Date</label> <br>
-          <input type="date" class="form-control" id="termination" name="termination">
+          <input type="date" class="form-control" id="termination" name="termination" value="2/3/2016">
         </div>
         <div class="form-group">
           <label for="notional amount">Notional Amount:</label>
-          <input type="number" class="form-control" id="notional" name="notional">
+          <input type="number" class="form-control" id="notional" name="notional" value="100000">
         </div>
         <div class="form-group">
           <label for="fixed rate">Fixed Rate:</label>
-          <input type="number" class="form-control" id="fixed" name="fixed">
+          <input type="number" step="0.01" class="form-control" id="fixed" name="fixed" value="7">
         </div>
         <div class="form-group">
           <label for="floating rate">Floating Rate Index:</label>
-          <input type="text" class="form-control" id="float" name="float">
+          <input type="text" class="form-control" id="float" name="float" value="LIBOR">
         </div>
         <div class="form-group">
           <label for="float spread">Float Spread:</label>
-          <input type="number" class="form-control" id="spread" name="spread">
+          <input type="number" step="0.01" class="form-control" id="spread" name="spread" value="0.5">
         </div>
         <div class="form-group">
           <label for="fixed payer">Fixed Rate Payer:</label>
@@ -66,8 +66,9 @@
         </div>
 		    <div class="form-group">
           <label for="email">Trader ID:</label>
-          <input type="number" class="form-control" id="trader" name="trader">
+          <input type="number" class="form-control" id="trader" name="trader" value="2">
         </div>
+
         <button type="submit" class="btn btn-primary">Add Swap</button>
       </form>
       {{ success }}
