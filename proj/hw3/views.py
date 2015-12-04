@@ -41,13 +41,62 @@ def addSwap(request):
     return render(request, 'hw3/addSwap.html')
 
 def EODProcess(request):
-    if request.method == 'POST':
-        #TODO: Query database for aggregate, and roll day to the next
 
-        #TODO: Figure out a way to store the calendar, and find the next business day
-        response = 0
+    if request.method == 'POST':
+        cursor=connection.cursor()
+        #get date and update date
+        cursor.execute('call EndofDay()')
+        date_from_db = cursor.fetchall()
+        date = str(date_from_db[0][0])
+        #print "date: " + date
+        year = str(date[:4])
+        month = str(date[5:7])
+        if (month[:1] == "0"):
+            month = month[1:]
+        #print "month: " + month
+        #print "year: " + year
+        cursor.execute("select * from (select * from (select * from calendar where day_of_the_week not in ('Saturday','Sunday') and date not in (select date from holiday)) as trading_day where month(trading_day.date)=%s and year(trading_day.date)=%s order by date desc limit 3) as last_three order by date limit 1",[month,year])
+        this_month_expir_date_from_db = cursor.fetchall()
+        #print this_month_expir_date_from_db
+        this_month_expir_date = str(this_month_expir_date_from_db[0][0])
+        #print this_month_expir_date
+        #print "this_month_expir_date: " + this_month_expir_date
+        
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="expiring_contracts.csv"'
+        header=['id','time','product_code','month_code','year','lots','buy_or_sell','order_type,price','trader','status']
+        
+        writer = csv.writer(response)
+        writer.writerow(header)
+        
+
+        if this_month_expir_date != date:
+            month_code = moth_num_to_code(month)
+            #print [year, month_code]
+            cursor.execute("SELECT * FROM trade where year=%s and month_code=%s",[year, month_code])
+            expiring_contracts = cursor.fetchall() 
+            for i in range(len(expiring_contracts)):
+                writer.writerow(expiring_contracts[i])
+                
+        return response
+
 
     return render(request, 'hw3/EOD.html')
+
+def moth_num_to_code(x):
+    return {
+        1: "F",
+        2: "G",
+        3: "H",
+        4: "J",
+        5: "K",
+        6: "M",
+        7: "N",
+        8: "Q",
+        9: "U",
+        10: "V",
+        11: "X"       
+    }.get(x, "Z")
 
 def addtrader(request):
     """
