@@ -47,6 +47,7 @@ def EODProcess(request):
         #get date and update date
         cursor.execute('call EndofDay()')
         date_from_db = cursor.fetchall()
+        cursor.close()
         date = str(date_from_db[0][0])
         print "date: " + date
         year = str(date[:4])
@@ -55,8 +56,11 @@ def EODProcess(request):
             month = month[1:]
         print "month: " + month
         print "year: " + year
-        cursor.execute("select * from (select * from (select * from calendar where day_of_the_week not in ('Saturday','Sunday') and date not in (select date from holiday)) as trading_day where month(trading_day.date)=%s and year(trading_day.date)=%s order by date desc limit 3) as last_three order by date limit 1",[month,year])
+
+        cursor = connection.cursor()
+        cursor.execute("select * from (select * from (select * from calendar where day_of_the_week not in ('Saturday','Sunday') and date not in (select date from holiday)) as trading_day where month(trading_day.date)=%s and year(trading_day.date)=%s order by date desc limit 3) as last_three order by date limit 1;",[month,year])
         this_month_expir_date_from_db = cursor.fetchall()
+        cursor.close()
         print this_month_expir_date_from_db
         this_month_expir_date = str(this_month_expir_date_from_db[0][0])
         print this_month_expir_date
@@ -73,8 +77,10 @@ def EODProcess(request):
         if str(this_month_expir_date) == str(date):
             month_code = moth_num_to_code(month)
             #print [year, month_code]
+            cursor = connection.cursor()
             cursor.execute("SELECT * FROM trade where year=%s and month_code=%s",[year, month_code])
             expiring_contracts = cursor.fetchall() 
+            cursor.close()
             for i in range(len(expiring_contracts)):
                 writer.writerow(expiring_contracts[i])
                 
