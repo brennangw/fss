@@ -48,19 +48,19 @@ def EODProcess(request):
         cursor.execute('call EndofDay()')
         date_from_db = cursor.fetchall()
         date = str(date_from_db[0][0])
-        #print "date: " + date
+        print "date: " + date
         year = str(date[:4])
         month = str(date[5:7])
         if (month[:1] == "0"):
             month = month[1:]
-        #print "month: " + month
-        #print "year: " + year
+        print "month: " + month
+        print "year: " + year
         cursor.execute("select * from (select * from (select * from calendar where day_of_the_week not in ('Saturday','Sunday') and date not in (select date from holiday)) as trading_day where month(trading_day.date)=%s and year(trading_day.date)=%s order by date desc limit 3) as last_three order by date limit 1",[month,year])
         this_month_expir_date_from_db = cursor.fetchall()
-        #print this_month_expir_date_from_db
+        print this_month_expir_date_from_db
         this_month_expir_date = str(this_month_expir_date_from_db[0][0])
-        #print this_month_expir_date
-        #print "this_month_expir_date: " + this_month_expir_date
+        print this_month_expir_date
+        print "this_month_expir_date: " + this_month_expir_date
         
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="expiring_contracts.csv"'
@@ -70,7 +70,7 @@ def EODProcess(request):
         writer.writerow(header)
         
 
-        if this_month_expir_date != date:
+        if str(this_month_expir_date) == str(date):
             month_code = moth_num_to_code(month)
             #print [year, month_code]
             cursor.execute("SELECT * FROM trade where year=%s and month_code=%s",[year, month_code])
