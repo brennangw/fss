@@ -16,7 +16,31 @@
     <servlet-name>get-trade-from-client</servlet-name>
     <url-pattern>/process-trade</url-pattern>
   </servlet-mapping>
-  <listener>
-    <listener-class>web.InitializeParties</listener-class>
-  </listener>
+  
+  <servlet>
+    <servlet-name>get-swap</servlet-name>
+    <servlet-class>web.ClearingServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>get-swap</servlet-name>
+    <url-pattern>/process-swap</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>request-clearing</servlet-name>
+    <servlet-class>web.ClearingRequestAcceptor</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>request-clearing</servlet-name>
+    <url-pattern>/request-clearing</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>clearing-status</servlet-name>
+    <servlet-class>web.ClearingStatusAcceptor</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>clearing-status</servlet-name>
+    <url-pattern>/clearing-status</url-pattern>
+  </servlet-mapping>
 </web-app>
