@@ -45,11 +45,9 @@ def addSwap(request):
         # requests.post('localhost:8080/fix/process-order', data=post_data) 
         # print(json.dumps(Swaps.__dict__))
         new.save()
-        post_data = {'start': start, 'termination': termination, 'fixed': fixed, 
-        'float_idx': float_idx, 'spread': spread, 'notional' : notional,
-        'payer': payer, 'clearing': clearing, 'trader_id': trader_id}
+        post_data = {'start': start, 'termination': termination, 'fixed': fixed, 'float_idx': float_idx, 'spread': spread, 'notional' : notional, 'payer': payer, 'clearing': clearing, 'trader_id': trader_id}
         # print "post_data: " + str(post_data)
-        requests.post('localhost:8080/fpml/process-swap', data=post_data)        
+        requests.post('http://localhost:8080/FIX/process-swap', data=post_data)        
         return HttpResponseRedirect('/hw4/?success=true')
     return render(request, 'hw4/addSwap.html')
  
@@ -166,7 +164,7 @@ def addtrade(request):
         type = request.POST.get('type', False)
         new = Trade(status = 0, time = date_time, product_code = product, month_code = month, year = year, lots = lots, buy_or_sell = sign, order_type = type, price = price, trader = trader)
         post_data = {'id': id, 'type': type, 'side': side, 'symbol': product, 'price': price, 'lots' : lots}
-        requests.post('localhost:8080/fix/process-order', data=post_data)
+        requests.post('http://localhost:8080/fix/process-order', data=post_data)
         new.save()
         return HttpResponseRedirect('/hw4/?success=true')
     else:
