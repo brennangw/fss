@@ -21,6 +21,7 @@ urlpatterns = [
     url(r'^hw2/', include('hw2.urls')),
     url(r'^hw3/', include('hw3.urls')),
     url(r'^hw4/', include('hw4.urls')),
+    url(r'^lb/', include('lb.urls')),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', include(admin.site.urls))
 ]

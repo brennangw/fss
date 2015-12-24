@@ -1,0 +1,21 @@
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="{% url 'index' %}">TradeBase</a>
+    </div>
+    <div>
+      <ul class="nav navbar-nav">
+        <li id="swap"><a href="{% url 'addSwap' %}">Add Swap</a></li>
+        <li id="trader"><a href="{% url 'addtrader' %}">Add Trader</a></li>
+        <li id="trade"><a href="{% url 'addtrade' %}">Add Trade</a></li>
+        <li id="history"><a href="{% url 'history' %}">Get All Fills</a></li>
+        <li id="aggregate"><a href="{% url 'aggregate' %}">Get Aggregate (w. Price)</a></li>
+        <li id="pnl"><a href="{% url 'pnl' %}">PnL Report</a></li>
+        <li id="pnlbytrader"><a href="{% url 'pnlbytrader' %}">Explain PnL by Trader</a></li>
+        <li id="pnlbytrade"><a href="{% url 'pnlbytrade' %}">Explain PnL by Trade</a></li>
+        <li id="pnlbyproduct"><a href="{% url 'pnlbyproduct' %}">Explain PnL by Product</a></li>
+        <li id="EOD"><a href="{% url 'EOD' %}">Get EOD Report</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>

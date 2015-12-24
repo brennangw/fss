@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="Description" content="Trade input page for hw1, CSOR4995">
+  <meta name="Author" content="Rajan Bhargava">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+  <!-- jQuery library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+  <!-- Latest compiled JavaScript -->
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+<div id="container">
+
+  {% include 'hw4/nav.html' %}
+  <div class="container">
+    <h1>Add Trade</h1>
+    <div id="sec-addtrade" class="section">
+      <form role="tradeaddform" id="tradeaddform" action="/hw4/addtrade/" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="code">Product Code:</label> <br>
+          <!-- <label class="radio-inline"><input type="radio" value="S01" name="product">S01</label>
+                      <label class="radio-inline"><input type="radio" value="S02" name="product">S02</label>
+                      <label class="radio-inline"><input type="radio" value="S03" name="product">S03</label>
+                      <label class="radio-inline"><input type="radio" value="S04" name="product">S04</label>
+                      <label class="radio-inline"><input type="radio" value="S05" name="product">S05</label>
+                      <label class="radio-inline"><input type="radio" value="S06" name="product">S06</label>
+                      <label class="radio-inline"><input type="radio" value="S07" name="product">S07</label>
+                      <label class="radio-inline"><input type="radio" value="S08" name="product">S08</label>
+                      <label class="radio-inline"><input type="radio" value="S09" name="product">S09</label>
+                      <label class="radio-inline"><input type="radio" value="S10" name="product">S10</label>
+                      <label class="radio-inline"><input type="radio" value="S11" name="product">S11</label>
+                      <label class="radio-inline"><input type="radio" value="S12" name="product">S12</label>
+                      <label class="radio-inline"><input type="radio" value="S13" name="product">S13</label>
+                      <label class="radio-inline"><input type="radio" value="S14" name="product">S14</label>
+                      <label class="radio-inline"><input type="radio" value="S15" name="product">S15</label> -->
+          <input type="text" class="form-control" id="code" name="product" value="HH">
+        </div>
+        <div class="form-group">
+          <label for="month">Month:</label>
+          <select class="form-control" id="month" name="month">
+            <option>F</option>
+            <option>G</option>
+            <option>H</option>
+            <option>J</option>
+            <option>K</option>
+            <option>M</option>
+            <option>N</option>
+            <option>Q</option>
+            <option>U</option>
+            <option>V</option>
+            <option>X</option>
+            <option>Z</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="year">Year:</label>
+          <input type="number" class="form-control" id="year" name="year" value="2015">
+        </div>
+        <div class="form-group">
+          <label for="email">Lots:</label>
+          <input type="number" class="form-control" id="lots" name="lots" value="1">
+        </div>
+        <div class="form-group">
+          <label for="email">Price (in cents):</label>
+          <input type="number" class="form-control" id="price" name="price">
+        </div>
+        <div class="form-group">
+          <label for="email">Buy/Sell:</label>
+          <select class="form-control" id="sign" name="sign">
+            <option>Buy</option>
+            <option>Sell</option>
+          </select>
+        </div>
+		<div class="form-group">
+			<label for="email">Type:(1 for Market Order, 2 for Limit Order, 3 for Pegged Order) </label>
+			<input type="number" class="form-control" id="type" name="type">
+		</div>
+        <div class="form-group">
+          <label for="email">Trader ID:</label>
+          <input type="number" class="form-control" id="trader" name="trader">
+        </div>
+        <button type="submit" class="btn btn-primary">Add Trade</button>
+      </form>
+      {{ success }}
+    </div>
+  </div>
+</div>
+</body>
+
+</html>

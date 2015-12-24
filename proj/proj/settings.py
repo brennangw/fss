@@ -42,6 +42,7 @@ INSTALLED_APPS = (
     'hw2',
     'hw3',
     'hw4',
+    'lb'
 )
 
 MIDDLEWARE_CLASSES = (
