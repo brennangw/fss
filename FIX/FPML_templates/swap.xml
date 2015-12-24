@@ -1,0 +1,175 @@
+<swap>
+    <productType>InterestRateSwap</productType>
+    <productId>USD3L</productId>
+    <swapStream id="floatingLeg">
+        <payerPartyReference href="sideB"/>
+        <receiverPartyReference href="sideA"/>
+        <calculationPeriodDates id="floatingLegCalcPeriodDates">
+            <effectiveDate>
+                <unadjustedDate>StartDate!!!!</unadjustedDate>
+                <dateAdjustments>
+                    <businessDayConvention>
+                    </businessDayConvention>
+                    <businessCenters>
+                        <businessCenter>USNY</businessCenter>
+                        <businessCenter>GBLO</businessCenter>
+                    </businessCenters>
+                </dateAdjustments>
+            </effectiveDate>
+            <terminationDate>
+                <unadjustedDate>Termination!!!!</unadjustedDate>
+                <dateAdjustments>
+                    <businessDayConvention>
+                    </businessDayConvention>
+                    <businessCenters>
+                        <businessCenter>USNY</businessCenter>
+                        <businessCenter>GBLO</businessCenter>
+                    </businessCenters>
+                </dateAdjustments>
+            </terminationDate>
+            <calculationPeriodDatesAdjustments>
+                <businessDayConvention>
+                </businessDayConvention>
+                <businessCenters>
+                    <businessCenter>USNY</businessCenter>
+                    <businessCenter>GBLO</businessCenter>
+                </businessCenters>
+            </calculationPeriodDatesAdjustments>
+            <calculationPeriodFrequency>
+                <periodMultiplier>3</periodMultiplier>
+                <period>M</period>
+                <rollConvention>4</rollConvention>
+            </calculationPeriodFrequency>
+        </calculationPeriodDates>
+        <paymentDates>
+            <calculationPeriodDatesReference href="floatingLegCalcPeriodDates"/>
+            <paymentFrequency>
+                <periodMultiplier>3</periodMultiplier>
+                <period>M</period>
+            </paymentFrequency>
+            <firstPaymentDate>2010-09-07</firstPaymentDate>
+            <payRelativeTo>CalculationPeriodEndDate</payRelativeTo>
+            <paymentDatesAdjustments>
+                <businessDayConvention>
+                </businessDayConvention>
+                <businessCenters>
+                    <businessCenter>USNY</businessCenter>
+                    <businessCenter>GBLO</businessCenter>
+                </businessCenters>
+            </paymentDatesAdjustments>
+        </paymentDates>
+        <resetDates id="floatingLegResetDates">
+            <calculationPeriodDatesReference href="floatingLegCalcPeriodDates"/>
+            <resetRelativeTo>
+            </resetRelativeTo>
+            <fixingDates>
+                <periodMultiplier>-2</periodMultiplier>
+                <period>D</period>
+                <dayType>Business</dayType>
+                <businessDayConvention>MODFOLLOWING</businessDayConvention>
+                <businessCenters>
+                    <businessCenter>GBLO</businessCenter>
+                </businessCenters>
+                <dateRelativeTo href="floatingLegResetDates"/>
+            </fixingDates>
+            <resetFrequency>
+                <periodMultiplier>3</periodMultiplier>
+                <period>M</period>
+            </resetFrequency>
+            <resetDatesAdjustments>
+                <businessDayConvention>
+                </businessDayConvention>
+                <businessCenters>
+                    <businessCenter>USNY</businessCenter>
+                    <businessCenter>GBLO</businessCenter>
+                </businessCenters>
+            </resetDatesAdjustments>
+        </resetDates>
+        <calculationPeriodAmount>
+            <calculation>
+                <notionalSchedule>
+                    <notionalStepSchedule>
+                        <initialValue>Notional!!!!</initialValue>
+                        <currency currencyScheme="http://www.fpml.org/ext/iso4217">USD</currency>
+                    </notionalStepSchedule>
+                </notionalSchedule>
+                <floatingRateCalculation>
+                    <floatingRateIndex>USD-LIBOR-BBA</floatingRateIndex>
+                    <indexTenor>
+                        <periodMultiplier>3</periodMultiplier>
+                        <period>M</period>
+                    </indexTenor>
+                </floatingRateCalculation>
+                <dayCountFraction>ACT/360</dayCountFraction>
+            </calculation>
+        </calculationPeriodAmount>
+    </swapStream>
+    <swapStream id="fixedLeg">
+        <payerPartyReference href="sideA"/>
+        <receiverPartyReference href="sideB"/>
+        <calculationPeriodDates id="fixedLegCalcPeriodDates">
+            <effectiveDate>
+                <unadjustedDate>2010-06-04</unadjustedDate>
+                <dateAdjustments>
+                    <businessDayConvention>MODFOLLOWING</businessDayConvention>
+                    <businessCenters>
+                        <businessCenter>USNY</businessCenter>
+                        <businessCenter>GBLO</businessCenter>
+                    </businessCenters>
+                </dateAdjustments>
+            </effectiveDate>
+            <terminationDate>
+                <unadjustedDate>2011-06-04</unadjustedDate>
+                <dateAdjustments>
+                    <businessDayConvention>MODFOLLOWING</businessDayConvention>
+                    <businessCenters>
+                        <businessCenter>USNY</businessCenter>
+                        <businessCenter>GBLO</businessCenter>
+                    </businessCenters>
+                </dateAdjustments>
+            </terminationDate>
+            <calculationPeriodDatesAdjustments>
+                <businessDayConvention>MODFOLLOWING</businessDayConvention>
+                <businessCenters>
+                    <businessCenter>USNY</businessCenter>
+                    <businessCenter>GBLO</businessCenter>
+                </businessCenters>
+            </calculationPeriodDatesAdjustments>
+            <calculationPeriodFrequency>
+                <periodMultiplier>6</periodMultiplier>
+                <period>M</period>
+                <rollConvention>4</rollConvention>
+            </calculationPeriodFrequency>
+        </calculationPeriodDates>
+        <paymentDates>
+            <calculationPeriodDatesReference href="fixedLegCalcPeriodDates"/>
+            <paymentFrequency>
+                <periodMultiplier>6</periodMultiplier>
+                <period>M</period>
+            </paymentFrequency>
+            <firstPaymentDate>2010-09-07</firstPaymentDate>
+            <payRelativeTo>CalculationPeriodEndDate</payRelativeTo>
+            <paymentDatesAdjustments>
+                <businessDayConvention>MODFOLLOWING</businessDayConvention>
+                <businessCenters>
+                    <businessCenter>USNY</businessCenter>
+                    <businessCenter>GBLO</businessCenter>
+                </businessCenters>
+            </paymentDatesAdjustments>
+        </paymentDates>
+        <calculationPeriodAmount>
+            <calculation>
+                <notionalSchedule>
+                    <notionalStepSchedule>
+                        <initialValue>Notional!!!!</initialValue>
+                        <currency currencyScheme="http://www.fpml.org/ext/iso4217">USD</currency>
+                    </notionalStepSchedule>
+                </notionalSchedule>
+                <fixedRateSchedule>
+                    <initialValue>FixedRate!!!!</initialValue>
+                </fixedRateSchedule>
+                <dayCountFraction>30/360</dayCountFraction>
+            </calculation>
+        </calculationPeriodAmount>
+    </swapStream>
+</swap>

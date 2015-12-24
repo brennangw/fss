@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cme:FpML xmlns="http://www.fpml.org/FpML-5/confirmation"
+          xmlns:cme="http://www.cmegroup.com/otc-clearing/confirmation"
+          xmlns:fpml="http://www.fpml.org/FpML-5/confirmation"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <cme:requestConsent fpmlVersion="5-0">
+        <header>
+            <messageId messageIdScheme="cme_message_id">66648986</messageId>
+            <sentBy messageAddressScheme="cme_clearingorg_id">CME</sentBy>
+            <sendTo messageAddressScheme="cme_firm_id">666</sendTo>
+            <sendTo messageAddressScheme="cme_exchange_id">CME</sendTo>
+            <creationTimestamp>current_time!!!!</creationTimestamp>
+        </header>
+        <isCorrection>false</isCorrection>
+        <correlationId correlationIdScheme="cme_trade_id">trader_id!!!!</correlationId>
+        <sequenceNumber>1</sequenceNumber>
+        <trade>
+            <tradeHeader xsi:type="cme:CMETradeHeader">
+                <partyTradeIdentifier>
+                    <partyReference href="clearing_service"/>
+                    <tradeId tradeIdScheme="cme_trade_id">trader_id!!!!</tradeId>
+                    <tradeId tradeIdScheme="client_trade_id">trader_id!!!!</tradeId>
+                    <tradeId tradeIdScheme="platform_trade_id">trader_id!!!!</tradeId>
+                </partyTradeIdentifier>
+                <partyTradeInformation>
+                    <partyReference href="clearing_firm"/>
+                    <accountReference href="account1"/>
+                    <relatedParty>
+                        <partyReference href="trade_source"/>
+                        <role>InputSource</role>
+                    </relatedParty>
+                    <category categoryScheme="cme_origin_code">HOUS</category>
+                    <!-- customer/house -->
+                </partyTradeInformation>
+                <tradeDate>trade_date!!!!</tradeDate>
+                <clearedDate>clear_date!!!!</clearedDate>
+                <cme:originatingEvent>NEW_TRADE</cme:originatingEvent>
+                <cme:status>ALLEGED</cme:status>
+            </tradeHeader>
+            <swap>
+                <!--- The product information of both the fixed and the floating go between the swap start and end block -->
+            </swap>
+        </trade>
+        <party id="clearing_firm">
+            <partyId partyIdScheme="clearing_member_firms">666</partyId>
+        </party>
+        <party id="clearing_service">
+            <partyId>CME</partyId>
+        </party>
+        <party id="trade_source">
+            <partyId>MarkitWire</partyId>
+        </party>
+        <account id="account1">
+            <accountId accountIdScheme="clearing_firm_accounts">666A</accountId>
+            <servicingParty href="clearing_firm"/>
+        </account>
+        <cme:limitReport xmlns="http://www.cmegroup.com/otcclearing/confirmation">
+            <description>Net 5 Yr DV01 Russian Doll Acct Limit exceeded</description>
+            <status>Exceeded</status>
+            <severity>High</severity>
+        </cme:limitReport>
+    </cme:requestConsent>
+</cme:FpML>
